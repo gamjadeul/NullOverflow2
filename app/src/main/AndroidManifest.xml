@@ -10,10 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NullOverflow">
         <activity
+            android:name=".Occupied_room"
+            android:exported="false" />
+        <activity
+            android:name=".Empty_room"
+            android:exported="false" />
+        <activity
+            android:name=".Send_email"
+            android:exported="false" />
+        <activity
             android:name=".MainOption"
-            android:theme="@style/AppTheme.Option"
             android:exported="false"
-            android:label="사용자 정보"/>
+            android:label="사용자 정보"
+            android:theme="@style/AppTheme.Option" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

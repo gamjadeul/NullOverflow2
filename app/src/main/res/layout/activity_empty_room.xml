@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Empty_room">
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="420dp"
+        android:layout_height="50dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Start Using by Connecting Bluetooth"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <Spinner
+        android:id="@+id/purpose"
+        android:layout_width="370dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="Purpose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/this_room_is_empty"/>
+
+    <TextView
+        android:id="@+id/this_room_is_empty"
+        android:layout_width="370dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginEnd="16dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:text="This room is"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/edge"/>
+
+    <TextView
+        android:id="@+id/room_info_empty"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="90dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="15dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="15dp"
+        android:text="room info"
+        app:layout_constraintBottom_toBottomOf="@+id/this_room_is_empty"
+        app:layout_constraintEnd_toEndOf="@+id/this_room_is_empty"
+        app:layout_constraintStart_toStartOf="@+id/this_room_is_empty"
+        app:layout_constraintTop_toTopOf="@+id/this_room_is_empty" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
