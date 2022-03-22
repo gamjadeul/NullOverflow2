@@ -14,7 +14,13 @@ public class Send_email extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        /*
+        수정자: 최종선 - MainOption.kt에서 Intent 전달할 때 해당 클래스를 사용하는데 런타임 오류가 나서 변경함
+        R.layout.activity_main으로 되어 있었음, 해당하는 클래스의 activity는 activity_send_email인 것 같아 변경함
+        (kotlin으로 만들어진 activity_main과 java로 만들어진 activity_main이 충돌하거나 혹은 해당하는 클래스의 activiysms activity_send_email인데 이름 달라서 오류나는지 이유는 모름)
+         */
+        //원래 코드 -> setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_send_email);
 
         String[] Q_type = {"Question type not chosen", "Lost & Fond", "Complaint"};
 

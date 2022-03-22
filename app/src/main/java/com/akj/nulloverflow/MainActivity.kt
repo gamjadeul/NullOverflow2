@@ -15,21 +15,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        //리사이클러뷰 어댑터 등록하는 부분
         val info:MutableList<Info> = loadData()
         var re_adapter = CustomAdapter()
         re_adapter.listData = info
         binding.seatRecycler.adapter = re_adapter
         binding.seatRecycler.layoutManager = LinearLayoutManager(this)
+        //
 
+        //맨 위 ActionBar에서 메뉴버튼 만들어주는 부분
         setSupportActionBar(binding.mainToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.mainToolbar.title = "사용현황"
+        //
 
+        //옵션 선택창 열리고 안에 있는 요소 클릭할 때 리스너 등록
         binding.mainNavigation.setNavigationItemSelectedListener(this)
+        //
     }
 
+    //리사이클러 뷰에서 사용될 데이터를 만들어주는 함수
     private fun loadData(): MutableList<Info> {
         val info: MutableList<Info> = mutableListOf()
         var floor: Int = 0
