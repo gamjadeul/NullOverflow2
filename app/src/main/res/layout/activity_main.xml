@@ -33,6 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!--Navigation View가 정의되어 있는 부분-->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/main_navigation"
         android:layout_width="wrap_content"
