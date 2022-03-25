@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.akj.nulloverflow.databinding.ActivityMainBinding
@@ -34,6 +36,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //옵션 선택창 열리고 안에 있는 요소 클릭할 때 리스너 등록
         binding.mainNavigation.setNavigationItemSelectedListener(this)
         //
+
+        /*
+        이 부분이 navigation의 header 텍스트를 결정할 부분 setText의 파라미터로 Auth 혹은 Stor에서 받아온 자료가 넘어가야함
+        val nav_header_view = binding.mainNavigation.getHeaderView(0)
+        val nav_id_text = nav_header_view.findViewById<TextView>(R.id.testId)
+        val nav_name_text = nav_header_view.findViewById<TextView>(R.id.testName)
+        nav_name_text.setText()
+        nav_id_text.setText()
+         */
+
     }
 
     //리사이클러 뷰에서 사용될 데이터를 만들어주는 함수
@@ -110,6 +122,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return info
     }
 
+    //Action Bar에서 옵션버튼 눌렸을 때 Drawer Layout이 나옴
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
@@ -122,12 +135,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    //해당 NavigationItemSelected Listener에 로그아웃 및 다른 기능들 구현해야함 -> 로그인 상태일 경우 '로그아웃'이라는 문구가 뜨도록
+    //로그아웃 후에도 해당 액티비티에 남아 있어야 함, 사용자 정보와 이메일 등이 지워진 상태로
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.main_option -> {
                 startActivity(Intent(this, MainOption::class.java))
                 binding.mainDrawer.closeDrawers()
                 return true
+            }
+            R.id.log_out -> {
+                //이 위에 파이어베이스 관련해서 로그아웃하는 코드가 들어가야 됨
+                binding.mainDrawer.closeDrawers()
             }
         }
         return false
