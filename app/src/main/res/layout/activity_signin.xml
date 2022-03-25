@@ -7,11 +7,11 @@
     tools:context=".Signin">
 
     <EditText
-        android:id="@+id/signin_ID"
+        android:id="@+id/signin_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Username"
+        android:hint="Email"
         android:inputType="text"
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/signin_password"
@@ -26,7 +26,7 @@
         android:inputType="textPassword"
         android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/signin_ID"
+        app:layout_constraintStart_toStartOf="@+id/signin_email"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
