@@ -16,6 +16,13 @@ class MainOption : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        /*
+        이 부분은 옵션창에서 이름이랑 ID 받아와서 적용시켜주는 부분
+        var user_id = binding.userId.setText()
+        var user_name = binding.userName.setText()
+         */
+
         //spinner에서 사용할 아이템 목록
         var purpose_data = listOf("사용목적을 선택해 주세요.", "공부", "회의", "스터디")
         var adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, purpose_data)
