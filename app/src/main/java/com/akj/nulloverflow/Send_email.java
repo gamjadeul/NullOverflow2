@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 public class Send_email extends AppCompatActivity {
-
+    //
     //공식문서의 '팝업 메시지 빌드 및 표시' 참조해서 send 버튼 눌렀을 때 팝업메시지 뜨게 함
     @Override
     protected void onCreate(Bundle savedInstanceState) {
