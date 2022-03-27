@@ -1,5 +1,6 @@
 package com.akj.nulloverflow
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import com.akj.nulloverflow.databinding.ActivityMainOptionBinding
 
 class MainOption : AppCompatActivity() {
@@ -43,6 +45,23 @@ class MainOption : AppCompatActivity() {
         binding.requestBtn.setOnClickListener {
             startActivity(Intent(this@MainOption, Send_email::class.java))
         }
+
+        //자리비움 버튼 클릭시에 Alert Dialog 띄워줌
+        binding.emptyBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("자리 비움")
+                .setMessage("자리를 비울 수 있는 시간은 10분입니다.")
+                .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, id ->
+                    //이부분에 서버에 10분 딜레이주는 코드 추가해야함
+                    //
+
+                })
+                .setNegativeButton("취소", DialogInterface.OnClickListener { dialogInterface, id ->
+
+                })
+            builder.show()
+        }
+        //
 
         //액션바 상에 뒤로가기 버튼 관련된 코드, 밑에 있는 onOptionsItemSelected함수를 콜백함
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

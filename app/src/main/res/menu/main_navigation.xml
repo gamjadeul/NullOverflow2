@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/log_out"
-        android:icon="@drawable/ic_baseline_exit_to_app_24"
-        android:title="로그아웃"/>
+        android:icon="@drawable/ic_baseline_login_24"
+        android:title="로그인"/>
 
 </menu>

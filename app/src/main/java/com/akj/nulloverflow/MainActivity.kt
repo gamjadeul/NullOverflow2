@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.akj.nulloverflow.databinding.ActivityMainBinding
@@ -44,6 +45,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val nav_name_text = nav_header_view.findViewById<TextView>(R.id.testName)
         nav_name_text.setText()
         nav_id_text.setText()
+         */
+
+        /*
+        로그인 상태인지 로그아웃 상태인지에 따라서 Navigation 메뉴의 텍스트와 아이콘이 변경되어야 한다.
+        val nav_menu_assign = binding.mainNavigation.menu.findItem(R.id.log_out)
+        nav_menu_assign.setTitle("로그아웃")
+        nav_menu_assign.setIcon(getDrawable(R.drawable.ic_baseline_login_24))
          */
 
     }
