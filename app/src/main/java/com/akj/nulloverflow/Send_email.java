@@ -2,10 +2,12 @@ package com.akj.nulloverflow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 public class Send_email extends AppCompatActivity {
@@ -42,5 +44,19 @@ public class Send_email extends AppCompatActivity {
 
             }
         });
+
+        EditText user_email = findViewById(R.id.editTextTextPersonName); //user id말고 email 주소 바로 받기
+        EditText used_time = findViewById(R.id.editTextTime);
+        EditText used_date = findViewById(R.id.used_date);
+        EditText content = findViewById(R.id.editTextTextMultiLine);
+
+        Intent mail_intent = new Intent(Intent.ACTION_SEND);
+        mail_intent.setType("*/*");
+
+        mail_intent.putExtra(Intent.EXTRA_EMAIL, "gamjadeul0217@gmail.com");
+        mail_intent.putExtra(Intent.EXTRA_SUBJECT, user_email.getText());
+
+        String[] mail_content = {used_date.getText().toString(), used_time.getText().toString(), content.getText().toString()};
+        mail_intent.putExtra(Intent.EXTRA_TEXT, mail_content);
     }
 }
