@@ -33,7 +33,7 @@ public class Signin extends AppCompatActivity {
         signin_password = findViewById(R.id.signin_password);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("NullOverflow2");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("NullOverflow");
 
         signin_btn1 = findViewById(R.id.signin_button1);
         signin_btn1.setOnClickListener(new View.OnClickListener() {
