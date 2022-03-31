@@ -14,6 +14,7 @@ class bluetooth_scanning : AppCompatActivity() {
     //블루투스 아답터 가져옴
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        //선언한 bluetootAdapter에 가져온 아답터 할당.
         bluetoothManager.adapter
     }
 
