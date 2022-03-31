@@ -24,13 +24,13 @@
             android:label="사용자 정보"
             android:theme="@style/AppTheme.Option" />
         <activity
-            android:name=".Signin"
+            android:name=".MainActivity"
             android:exported="false"/>
         <activity
             android:name=".Signup"
             android:exported="false"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".Signin"
             android:exported="true"
             android:theme="@style/AppTheme.Main">
             <intent-filter>
