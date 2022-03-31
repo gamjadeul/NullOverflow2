@@ -17,24 +17,20 @@
         <entry key="..\:/AndroidStudioProjects/NullOverflow/app/src/main/res/menu/main_navigation.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow/app/src/main/res/menu/main_option_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow/app/src/main/res/menu/main_toolbar.xml" value="0.36614583333333334" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/header_background.xml" value="0.225" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.1175" />
+        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_bluetooth_scanning.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_empty_room.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main_option.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_occupied_room.xml" value="0.34556159420289856" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_send_email.xml" value="0.36614583333333334" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_signin.xml" value="0.36614583333333334" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_signup.xml" value="0.36614583333333334" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/header.xml" value="0.36614583333333334" />
+        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/bluetooth_list.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/seat_recylcer.xml" value="0.36614583333333334" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/menu/main_navigation.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/gyte1/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main.xml" value="0.17603850050658562" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_empty_room.xml" value="0.1" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main_option.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_occupied_room.xml" value="0.1" />
-        <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_send_email.xml" value="0.4" />
+        <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_send_email.xml" value="0.1" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/drawer.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/edge.xml" value="0.1" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/header.xml" value="0.2246376811594203" />
@@ -42,7 +38,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
