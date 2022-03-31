@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -45,18 +46,28 @@ public class Send_email extends AppCompatActivity {
             }
         });
 
-        EditText user_email = findViewById(R.id.editTextTextPersonName); //user id말고 email 주소 바로 받기
-        EditText used_time = findViewById(R.id.editTextTime);
-        EditText used_date = findViewById(R.id.used_date);
-        EditText content = findViewById(R.id.editTextTextMultiLine);
+        Button send_btn = (Button) findViewById(R.id.button);
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        Intent mail_intent = new Intent(Intent.ACTION_SEND);
-        mail_intent.setType("*/*");
+                Spinner mail_title = findViewById(R.id.spinner);
+                EditText used_time = findViewById(R.id.editTextTime);
+                EditText used_date = findViewById(R.id.used_date);
+                EditText content = findViewById(R.id.editTextTextMultiLine);
 
-        mail_intent.putExtra(Intent.EXTRA_EMAIL, "gamjadeul0217@gmail.com");
-        mail_intent.putExtra(Intent.EXTRA_SUBJECT, user_email.getText());
+                Intent mail_intent = new Intent(Intent.ACTION_SEND);
+                mail_intent.setType("*/*");
 
-        String[] mail_content = {used_date.getText().toString(), used_time.getText().toString(), content.getText().toString()};
-        mail_intent.putExtra(Intent.EXTRA_TEXT, mail_content);
+                mail_intent.putExtra(Intent.EXTRA_EMAIL, "gamjadeul0217@gmail.com");
+                mail_intent.putExtra(Intent.EXTRA_SUBJECT, mail_title.getSelectedItem().toString());
+
+                String[] mail_content = {used_date.getText().toString(), used_time.getText().toString(), content.getText().toString()};
+                mail_intent.putExtra(Intent.EXTRA_TEXT, mail_content);
+
+                startActivity(mail_intent);
+            }
+        });
+
     }
 }
