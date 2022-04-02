@@ -40,16 +40,30 @@ class bluetooth_scanning : AppCompatActivity() {
 
     //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
     private val bleScanCallBack = object : ScanCallback() {
-        //BLE의 advertisement가 발견되었을 때 호출됨
+        //BLE의 advertisement가 발견되었을 때 호출됨(필터 없이 호출되는 경우, 필터가 있어도 호출되는 경우가 존재)
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
 
-
+            result?.let {
+                if(!deviceList.contains(result.device)){
+                    deviceList.add(result.device)
+                }
+            }
         }
 
-        //Batch scan result가 전달될 때 call back됨
+        //Batch scan result가 전달될 때 call back됨(lowpower옵션을 주거나 필터를 적용했을 때 호출됨, 한번에 하나의 값에만 반응을 하는 것이 아닌 전체를 묶어서 뿌려줌)
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
+
+            //결과로 받은 result가 null이 아닐때
+            //results의 타입 = ScanResult for Bluetooth LE scan. BluetoothDevice타입과는 다르므로 results에서 해당하는 타입을 추출해야함
+            results?.let {
+                for(result in it) {
+                    //기존 deviceList에 없을 경우 추가
+                    if(!deviceList.contains(result.device))
+                        deviceList.add(result.device)
+                }
+            }
         }
 
         //scan 실패했을 때 호출되는 call back methods
@@ -140,7 +154,8 @@ class bluetooth_scanning : AppCompatActivity() {
         }
     }
 
-    //API레벨이 21이상인 롤리팝버전 이상만 사용 가능
+    //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
+    //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun deviceScan(state: Boolean) {
         if(!state) {
