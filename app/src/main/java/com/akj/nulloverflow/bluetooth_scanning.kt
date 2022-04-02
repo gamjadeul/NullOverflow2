@@ -1,18 +1,22 @@
 package com.akj.nulloverflow
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
-import java.util.jar.Manifest
 
 class bluetooth_scanning : AppCompatActivity() {
 
@@ -25,6 +29,34 @@ class bluetooth_scanning : AppCompatActivity() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         //선언한 bluetootAdapter에 가져온 아답터 할당.
         bluetoothManager.adapter
+    }
+
+    //Scan 하는 시간
+    private val SCAN_PERIOD: Long = 10000
+    //Scan한 블루투스 기기를 저장할 array list
+    private var deviceList = ArrayList<BluetoothDevice>()
+    //scan상태를 알려주는 변수
+    private var scan_state:Boolean = false
+
+    //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
+    private val bleScanCallBack = object : ScanCallback() {
+        //BLE의 advertisement가 발견되었을 때 호출됨
+        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            super.onScanResult(callbackType, result)
+
+
+        }
+
+        //Batch scan result가 전달될 때 call back됨
+        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+            super.onBatchScanResults(results)
+        }
+
+        //scan 실패했을 때 호출되는 call back methods
+        override fun onScanFailed(errorCode: Int) {
+            super.onScanFailed(errorCode)
+            Toast.makeText(this@bluetooth_scanning, "검색에 실패했습니다. Error : ${errorCode}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +84,10 @@ class bluetooth_scanning : AppCompatActivity() {
                     val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                     resultActivity.launch(enableBtIntent)
                 }
+                //블루투스 사용 확인 부분 끝
+
+                //스캔 시작
+
             } else {
                 //스캔을 멈추는 부분
             }
@@ -101,6 +137,16 @@ class bluetooth_scanning : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    //API레벨이 21이상인 롤리팝버전 이상만 사용 가능
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun deviceScan(state: Boolean) {
+        if(!state) {
+
+        } else {
+
         }
     }
 }
