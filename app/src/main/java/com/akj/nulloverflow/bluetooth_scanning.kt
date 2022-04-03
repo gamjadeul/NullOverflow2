@@ -1,5 +1,6 @@
 package com.akj.nulloverflow
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -11,6 +12,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,13 +34,17 @@ class bluetooth_scanning : AppCompatActivity() {
         bluetoothManager.adapter
     }
 
+    //관련 기능을 사용하기위해 필요한 permission집합
+    private val PERMISSION_LIST = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.BLUETOOTH_SCAN)
     //Scan 하는 시간
     private val SCAN_PERIOD: Long = 10000
     //Scan한 블루투스 기기를 저장할 array list
     private var deviceList = ArrayList<BluetoothDevice>()
     //scan상태를 알려주는 변수
     private var scan_state:Boolean = false
-
+    //to schedule messages and runnables to be executed at some point in the future, 특정시간 이후에 스캔을 멈추는 동작을 하기위해 설정
+    private val handler = Handler(Looper.getMainLooper())
     //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
     private val bleScanCallBack = object : ScanCallback() {
         //BLE의 advertisement가 발견되었을 때 호출됨(필터 없이 호출되는 경우, 필터가 있어도 호출되는 경우가 존재)
@@ -77,8 +84,6 @@ class bluetooth_scanning : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        //위치정보 사용권한 확인
-        checkPermission()
 
         //scanBtn에 setOnCheckedChangeListener달아서 scan할 수 있도록
         binding.scanBtn.setOnCheckedChangeListener { _, isChecked ->
@@ -100,6 +105,12 @@ class bluetooth_scanning : AppCompatActivity() {
                 }
                 //블루투스 사용 확인 부분 끝
 
+                //필요한 권한 있는지 검사
+                if(!checkPermission(PERMISSION_LIST)) {
+                    ActivityCompat.requestPermissions(this, PERMISSION_LIST, 100)
+                }
+                //deviceScan(true)
+
                 //스캔 시작
 
             } else {
@@ -119,19 +130,18 @@ class bluetooth_scanning : AppCompatActivity() {
     }
 
     //permission확인해주는 함수
-    fun checkPermission() {
-        //ACCESS_FINE_LOCATION이나 ACCESS_COARSE_LOCATION에 관한 권한이 하나라도 GRANTED되어있지 않으면 권한을 요청한다.
-        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-            //3번재 parameter인 100은 구분을 위해서 넣어주는 requestCode임
-            ActivityCompat.requestPermissions(this, permissions, 100)
-        } else {
-            //모든 권한이 있을 떄 이부분에서 호출 발생 -> 딱히 할 행동 없으므로 안적어도 될듯
+    fun checkPermission(permission_list: Array<String>): Boolean {
+        //bluetoothAdapter.bluetoothLeScanner.startScan() 매서드가 Marshmallow이상 버전에서만 사용이 가능함
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for(permission in permission_list) {
+                //해당 권한이 없을 경우 false반환
+                if(ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false
+                }
+            }
         }
+        return true
     }
-
-    //기기를 scan할 때 사용할 함수 만들어 줘야됨
 
     //사용자 요청을 처리할때 콜백되는 함수 Override
     override fun onRequestPermissionsResult(
@@ -143,25 +153,33 @@ class bluetooth_scanning : AppCompatActivity() {
 
         when (requestCode) {
             100 -> {
-                //요청정보 배열을 돌면서 확인
+                //요청정보 배열에서 권한이 없다면 종료
                 if(grantResults.isNotEmpty()) {
-                    for (grant in grantResults) {
-                        if (grant != PackageManager.PERMISSION_GRANTED)
-                            Toast.makeText(this, "위치정보 사용을 거절하였습니다.", Toast.LENGTH_SHORT).show()
+                    if (grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                        Toast.makeText(this, "해당 권한을 승인해야합니다.", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
                 }
             }
         }
     }
 
+    /*
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun deviceScan(state: Boolean) {
-        if(!state) {
-
+        if(state) {
+            handler.postDelayed({
+                scan_state = false
+                bluetoothAdapter?.bluetoothLeScanner?.stopScan(bleScanCallBack)
+            }, SCAN_PERIOD)
+            scan_state = true
+            deviceList.clear()
+            bluetoothAdapter?.bluetoothLeScanner?.startScan(bleScanCallBack)
         } else {
 
         }
     }
+     */
 }
