@@ -167,6 +167,7 @@ class bluetooth_scanning : AppCompatActivity() {
     /*
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
+    compilesdk가 32 즉, marshmallow보다 높은 버전임, 이렇게되면 권한 사용할때마다 check해줘야됨, 모든 권한을 check할 수 있는 check함수 만들어야될듯
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun deviceScan(state: Boolean) {
         if(state) {
