@@ -182,7 +182,39 @@ class bluetooth_scanning : AppCompatActivity() {
             }
         }
     }
+    inner class BleCustomAdapter: RecyclerView.Adapter<BleHolder>() {
 
+        private val bleList = ArrayList<BluetoothDevice>()
+        private lateinit var context: Context
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleHolder {
+            val binding = BluetoothListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+            return BleHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: BleHolder, position: Int) {
+            if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
+                ActivityCompat.requestPermissions(this@bluetooth_scanning, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
+                //외부함수 끌어다 쓰는데 문제가 있음, 그냥 bluetooth_scanning.kt에 다 구현하는게 나을듯
+            }
+            holder.binding.bleNameTxt.text = bleList[position].name
+            holder.binding.bleAddTxt.text = bleList[position].address
+        }
+
+        override fun getItemCount(): Int {
+            return bleList.size
+        }
+
+        override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+            super.onAttachedToRecyclerView(recyclerView)
+
+            context = recyclerView.context
+        }
+    }
+
+    class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root) {
+
+    }
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
     //compilesdk가 32 즉, marshmallow보다 높은 버전임, 이렇게되면 권한 사용할때마다 check해줘야됨, 모든 권한을 check할 수 있는 check함수 만들어야될듯
