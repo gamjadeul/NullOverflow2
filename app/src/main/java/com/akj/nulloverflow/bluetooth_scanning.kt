@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,6 +56,7 @@ class bluetooth_scanning : AppCompatActivity() {
             result?.let {
                 if(!deviceList.contains(result.device)){
                     deviceList.add(result.device)
+                    //리사이클러 뷰에 변화된거 띄워주는 코드 작성
                 }
             }
         }
@@ -70,6 +72,7 @@ class bluetooth_scanning : AppCompatActivity() {
                     //기존 deviceList에 없을 경우 추가
                     if(!deviceList.contains(result.device))
                         deviceList.add(result.device)
+                    //리사이클러 뷰에 변화된거 띄워주는 코드 작성
                 }
             }
         }
@@ -93,6 +96,8 @@ class bluetooth_scanning : AppCompatActivity() {
         //scanBtn에 setOnCheckedChangeListener달아서 scan할 수 있도록
         binding.scanBtn.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
+                //스캔중일때는 위에있는 스캔중... text가 보이도록
+                binding.progressTxt.visibility = View.VISIBLE
                 //스캔 시작을 하는 부분 블루투스 사용 가능한지 불가능한지 띄워줘야함
                 //블루투스가 사용 불가능한 상태라면 사용 가능하게 바꿔줘야 함
                 if(bluetoothAdapter?.isEnabled == false) {
@@ -114,6 +119,8 @@ class bluetooth_scanning : AppCompatActivity() {
                 deviceScan(true)
 
             } else {
+                //스캔중이 아닐때는 위에 스캔중...이라는 text가 안보이도록
+                binding.progressTxt.visibility = View.INVISIBLE
                 //스캔을 멈추는 부분
                 deviceScan(false)
             }
