@@ -14,13 +14,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
+import com.akj.nulloverflow.databinding.BluetoothListBinding
 
 class bluetooth_scanning : AppCompatActivity() {
 
@@ -178,7 +182,6 @@ class bluetooth_scanning : AppCompatActivity() {
             }
         }
     }
-
 
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
