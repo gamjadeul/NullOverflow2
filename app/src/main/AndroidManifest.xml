@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.akj.nulloverflow">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!--If your app targets Android 9 or lower, you can declare
+         ACCESS_COARSE_LOCATION instead. 현재 프로젝트 버전 min 21 target 32-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--해당 기능은 위험권한이기 때문에 특정 버전 이상에서는 동적으로 권한기능 받아와야 함-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 기능명세, BLE기능을 지원하지 않는 기기는 스토어상에 검색 불가능 -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <!--Scan기능을 위해 추가한 permission-->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NullOverflow">
+        <activity
+            android:name=".bluetooth_scanning"
+            android:exported="false" />
         <activity
             android:name=".Occupied_room"
             android:exported="false" />
@@ -24,13 +40,13 @@
             android:label="사용자 정보"
             android:theme="@style/AppTheme.Option" />
         <activity
-            android:name=".MainActivity"
-            android:exported="false"/>
+            android:name=".Signin"
+            android:exported="false" />
         <activity
             android:name=".Signup"
             android:exported="false" />
         <activity
-            android:name=".Signin"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/AppTheme.Main">
             <intent-filter>
