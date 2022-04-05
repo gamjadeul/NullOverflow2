@@ -7,6 +7,7 @@
     tools:context=".bluetooth_scanning">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bleRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
