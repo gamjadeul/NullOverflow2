@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
 import com.akj.nulloverflow.databinding.BluetoothListBinding
@@ -63,6 +64,7 @@ class bluetooth_scanning : AppCompatActivity() {
                 if(!deviceList.contains(result.device)){
                     deviceList.add(result.device)
                     //리사이클러 뷰에 변화된거 띄워주는 코드 작성
+                    reAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -79,6 +81,7 @@ class bluetooth_scanning : AppCompatActivity() {
                     if(!deviceList.contains(result.device))
                         deviceList.add(result.device)
                     //리사이클러 뷰에 변화된거 띄워주는 코드 작성
+                    reAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -101,6 +104,11 @@ class bluetooth_scanning : AppCompatActivity() {
 
         //리사이클러뷰 아답터 연결
         reAdapter = BleCustomAdapter()
+        reAdapter.bleList = deviceList
+
+        //리사이클러뷰에 선언한 아답터 연결, 레이아웃 매니저로는 LinearLayout 사사용
+        binding.bleRecycler.adapter = reAdapter
+        binding.bleRecycler.layoutManager = LinearLayoutManager(this)
 
         //scanBtn에 setOnCheckedChangeListener달아서 scan할 수 있도록
         binding.scanBtn.setOnCheckedChangeListener { _, isChecked ->
@@ -189,7 +197,7 @@ class bluetooth_scanning : AppCompatActivity() {
     }
     inner class BleCustomAdapter: RecyclerView.Adapter<BleHolder>() {
 
-        private var bleList = ArrayList<BluetoothDevice>()
+        var bleList = ArrayList<BluetoothDevice>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleHolder {
             val binding = BluetoothListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -200,7 +208,6 @@ class bluetooth_scanning : AppCompatActivity() {
         override fun onBindViewHolder(holder: BleHolder, position: Int) {
             if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
                 ActivityCompat.requestPermissions(this@bluetooth_scanning, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
-                //외부함수 끌어다 쓰는데 문제가 있음, 그냥 bluetooth_scanning.kt에 다 구현하는게 나을듯
             }
             if(bleList.isNotEmpty()){
                 holder.binding.bleNameTxt.text = bleList[position].name
