@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
 import com.akj.nulloverflow.databinding.BluetoothListBinding
+import com.google.android.gms.common.GooglePlayServicesManifestException
 
 class bluetooth_scanning : AppCompatActivity() {
 
@@ -101,6 +102,9 @@ class bluetooth_scanning : AppCompatActivity() {
         if(!checkPermission(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))){
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION)
         }
+
+        //처음에는 글씨 안보이게
+        binding.progressTxt.visibility = View.INVISIBLE
 
         //리사이클러뷰 아답터 연결
         reAdapter = BleCustomAdapter()
@@ -228,9 +232,9 @@ class bluetooth_scanning : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun deviceScan(state: Boolean) {
         //BLUETOOTH_SCAN에 관한 permission 없을 때 요청해줘여야됨, 있으면 바로 및 if(state)문으로 진입
-        if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
+        if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))) {
             //permission요청
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), BLUETOOTH_SCAN_PERMISSION)
         }
         if(state) {
             handler.postDelayed({
