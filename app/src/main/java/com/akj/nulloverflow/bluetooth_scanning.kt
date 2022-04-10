@@ -3,6 +3,7 @@ package com.akj.nulloverflow
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -17,6 +18,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,7 +28,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
 import com.akj.nulloverflow.databinding.BluetoothListBinding
-import com.google.android.gms.common.GooglePlayServicesManifestException
+
+/*
+//해당 어플리케이션의 context를 사용하기위해 선언
+class MyApplication : Application() {
+    init {
+        instance = this
+    }
+
+    companion object {
+        private lateinit var instance: MyApplication
+        fun ApplicationContext(): Context {
+            return instance.applicationContext
+        }
+    }
+}
+*/
 
 class bluetooth_scanning : AppCompatActivity() {
 
@@ -46,7 +63,6 @@ class bluetooth_scanning : AppCompatActivity() {
     //onRequestPermissionResult의 인자로 넘어갈 상수들
     private val LOCATION_PERMISSION = 100
     private val BLUETOOTH_SCAN_PERMISSION = 101
-
     //Scan 하는 시간
     private val SCAN_PERIOD: Long = 10000
     //Scan한 블루투스 기기를 저장할 array list
@@ -55,6 +71,8 @@ class bluetooth_scanning : AppCompatActivity() {
     private var scan_state:Boolean = false
     //to schedule messages and runnables to be executed at some point in the future, 특정시간 이후에 스캔을 멈추는 동작을 하기위해 설정
     private val handler = Handler(Looper.getMainLooper())
+    //GATT서버에 연결하기위해 필요
+    private var bleGatt: BluetoothGatt ?= null
     //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
     private val bleScanCallBack = object : ScanCallback() {
         //BLE의 advertisement가 발견되었을 때 호출됨(필터 없이 호출되는 경우, 필터가 있어도 호출되는 경우가 존재)
@@ -69,7 +87,6 @@ class bluetooth_scanning : AppCompatActivity() {
                 }
             }
         }
-
         //Batch scan result가 전달될 때 call back됨(lowpower옵션을 주거나 필터를 적용했을 때 호출됨, 한번에 하나의 값에만 반응을 하는 것이 아닌 전체를 묶어서 뿌려줌)
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
@@ -106,9 +123,9 @@ class bluetooth_scanning : AppCompatActivity() {
         //처음에는 글씨 안보이게
         binding.progressTxt.visibility = View.INVISIBLE
 
-        //리사이클러뷰 아답터 연결
+        //리사이클러뷰 아답터 생성
         reAdapter = BleCustomAdapter()
-        reAdapter.bleList = deviceList
+        reAdapter.setBleList(deviceList)
 
         //리사이클러뷰에 선언한 아답터 연결, 레이아웃 매니저로는 LinearLayout 사용
         binding.bleRecycler.adapter = reAdapter
@@ -199,9 +216,19 @@ class bluetooth_scanning : AppCompatActivity() {
             }
         }
     }
+    //Permission 및 Context이용 때문에 Inner Class로 사용 -> inner class안에는 interface의 구현이 불가능 하지만 다른 방법을 찾았음
     inner class BleCustomAdapter: RecyclerView.Adapter<BleHolder>() {
+        //어댑터 내부에서 사용할 디바이스 정보가 담긴 ArrayList
+        private var bleList = ArrayList<BluetoothDevice>()
+        //ItemClickListener를 위한 변수
+        private lateinit var itemClickListener: AdapterView.OnItemClickListener
 
-        var bleList = ArrayList<BluetoothDevice>()
+        /*
+        인터페이스는 inner class안에 구현이 불가능함 - inner class 안에는 다른 inner class만 구현이 가능
+        interface OnItemClickListener {
+            fun OnClick(v: View, posiotion: Int)
+        }
+         */
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleHolder {
             val binding = BluetoothListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -217,14 +244,31 @@ class bluetooth_scanning : AppCompatActivity() {
                 holder.binding.bleNameTxt.text = bleList[position].name
                 holder.binding.bleAddTxt.text = bleList[position].address
             }
+            //특정 위치에 있는 device정보를 저장하기위해 사용
+            var device: BluetoothDevice = bleList[position]
+            holder.apply {
+                bleClickConn(device, View.OnClickListener {
+                    //어떤 ClickListener를 넘겨줄지 여기다가 선언함, Gatt 연결을 위한 코드를 쓰면 될듯
+                })
+            }
         }
 
         override fun getItemCount(): Int {
-            return deviceList.size
+            return bleList.size
+        }
+
+        //내부에서 사용하는 BleList변수가 private이기 때문에 값을 설정해주기위한 함수
+        fun setBleList(deviceList: ArrayList<BluetoothDevice>) {
+            this.bleList = deviceList
         }
     }
 
-    inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root)
+    inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bleClickConn(device: BluetoothDevice, onClickListener: View.OnClickListener) {
+            //위 onBindViewHolder에서 만든 onclickListener가 전달되면 실행함
+            binding.root.setOnClickListener(onClickListener)
+        }
+    }
 
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록

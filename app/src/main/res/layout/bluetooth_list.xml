@@ -3,7 +3,9 @@
     android:id="@+id/bleList"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/selectableItemBackground">
+    <!--클릭 애니메이션-->
 
     <TextView
         android:id="@+id/bleNameTxt"
