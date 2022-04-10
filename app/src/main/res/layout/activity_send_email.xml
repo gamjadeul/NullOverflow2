@@ -34,7 +34,7 @@
         android:background="@drawable/edge"
         android:elegantTextHeight="false"
         android:ems="10"
-        android:hint="user id"
+        android:hint="user email"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:labelFor="@id/editTextTextPersonName"

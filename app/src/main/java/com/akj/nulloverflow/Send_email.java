@@ -25,7 +25,7 @@ public class Send_email extends AppCompatActivity {
         //원래 코드 -> setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_send_email);
 
-        String[] Q_type = {"Question type not chosen", "Lost & Fond", "Complaint"};
+        String[] Q_type = {"Question type not chosen", "Lost & Found", "Complaint"};
 
         Spinner spinner1 = findViewById(R.id.spinner);
 
@@ -59,9 +59,10 @@ public class Send_email extends AppCompatActivity {
                 Intent mail_intent = new Intent(Intent.ACTION_SEND);
                 mail_intent.setType("*/*");
 
-                mail_intent.putExtra(Intent.EXTRA_EMAIL, "gamjadeul0217@gmail.com");
-                mail_intent.putExtra(Intent.EXTRA_SUBJECT, mail_title.getSelectedItem().toString());
+                mail_intent.putExtra(Intent.EXTRA_EMAIL, "gamjadeul0217@gmail.com"); //받는사람 설정
+                mail_intent.putExtra(Intent.EXTRA_SUBJECT, mail_title.getSelectedItem().toString()); //메일 제목 스피너에서 뽑아서 설정
 
+                //메일 내용: 사용날짜, 사용시간, 문의사항
                 String[] mail_content = {used_date.getText().toString(), used_time.getText().toString(), content.getText().toString()};
                 mail_intent.putExtra(Intent.EXTRA_TEXT, mail_content);
 
