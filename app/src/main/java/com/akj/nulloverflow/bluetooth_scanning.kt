@@ -277,10 +277,11 @@ class bluetooth_scanning : AppCompatActivity() {
 
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
-    //compilesdk가 32 즉, marshmallow보다 높은 버전임, 이렇게되면 권한 사용할때마다 check해줘야됨, 모든 권한을 check할 수 있는 check함수 만들어야될듯
+    //compilesdk가 32 즉, marshmallow보다 높은 버전임, 이렇게되면 권한 사용할때마다 check해줘야됨, 모든 권한을 check할 수 있는 check함수 만들어야될듯 -> targetSdk와 관련있는 거라서 이게 아닌듯
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun deviceScan(state: Boolean) {
         //BLUETOOTH_SCAN에 관한 permission 없을 때 요청해줘여야됨, 있으면 바로 및 if(state)문으로 진입
+        //해당부분 역시 MinSdk가 21인데 반해 targetSdk가 30이상이라 추가된 코드 따라서 분기분이 필요할 수도?
         if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))) {
             //permission요청
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), BLUETOOTH_SCAN_PERMISSION)
