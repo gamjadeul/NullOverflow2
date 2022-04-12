@@ -60,9 +60,11 @@ class bluetooth_scanning : AppCompatActivity() {
 
     //리사이클러뷰 아답터
     private lateinit var reAdapter: BleCustomAdapter
-    //onRequestPermissionResult의 인자로 넘어갈 상수들
-    private val LOCATION_PERMISSION = 100
-    private val BLUETOOTH_SCAN_PERMISSION = 101
+    companion object {
+        //onRequestPermissionResult의 인자로 넘어갈 상수들
+        val LOCATION_PERMISSION = 100
+        val BLUETOOTH_SCAN_PERMISSION = 101
+    }
     //Scan 하는 시간
     private val SCAN_PERIOD: Long = 10000
     //Scan한 블루투스 기기를 저장할 array list
@@ -248,7 +250,10 @@ class bluetooth_scanning : AppCompatActivity() {
             var device: BluetoothDevice = bleList[position]
             holder.apply {
                 bleClickConn(device, View.OnClickListener {
-                    //어떤 ClickListener를 넘겨줄지 여기다가 선언함, Gatt 연결을 위한 코드를 쓰면 될듯
+                    //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
+                    deviceScan(false)
+                    //처음 bleGatt의 값은 null
+                    bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
                 })
             }
         }
