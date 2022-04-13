@@ -239,7 +239,7 @@ class bluetooth_scanning : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: BleHolder, position: Int) {
-            if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
                 ActivityCompat.requestPermissions(this@bluetooth_scanning, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
             }
             if(bleList.isNotEmpty()){
@@ -282,7 +282,7 @@ class bluetooth_scanning : AppCompatActivity() {
     private fun deviceScan(state: Boolean) {
         //BLUETOOTH_SCAN에 관한 permission 없을 때 요청해줘여야됨, 있으면 바로 및 if(state)문으로 진입
         //해당부분 역시 MinSdk가 21인데 반해 targetSdk가 30이상이라 추가된 코드 따라서 분기분이 필요할 수도?
-        if (!checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))) {
             //permission요청
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), BLUETOOTH_SCAN_PERMISSION)
         }
