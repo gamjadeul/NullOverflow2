@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat
 //bluetooth_scanning 에서 넘어오는 bluetoothGatt 값은 처음에는 null
 class BluetoothService(private val context: Context, private var bluetoothGatt: BluetoothGatt?) {
 
-    //처음 생성사에 의해 생성될 때 device의 값은 null이며 이후 gatt라는 함수에서 할당됨
+    //처음 생성자에 의해 생성될 때 device의 값은 null이며 이후 gatt라는 함수에서 할당됨
     private var device: BluetoothDevice? = null
     //GATT연결에 사용될 GATT callback함수
     private val gattCallback : BluetoothGattCallback = object : BluetoothGattCallback() {
@@ -32,7 +32,9 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
                     //연결되었을 때 연결정보 보내주면 됨
+                    //MAC Address를 보내주는 것이 아닌 Minor 값을 꺼내서 사용해야할듯
                     //해당하는 bluetoothGatt 객체에서 제공하는 서비스를 검색하고 해당 기기에서 서비스가 가능한 목록들을 onServicesDiscovered 함수에 콜백을 시켜준다.
+                    //Minor 값만 얻어오는 거면 굳이 서비스 필요 없을거 같긴한데, 연결정보랑 Minor 값 받아와서 확인하면 될거같음
                     bluetoothGatt?.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
@@ -45,6 +47,9 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
         //Callback invoked when the list of remote services, characteristics and descriptors for the remote device have been updated, ie new services have been discovered.
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
+
+            //위 onConnectionStateChange 함수에서 연결상태가 되면 discoverServices()가 호출이 되는데 호출되면 해당 콜백함수를 호출하게 됨
+            //각 기기마다 UUID가 있음(사용 목적에 따라서, 기기마다 제공하는 서비스가 존재함 -> 확인 후 어떤 UUID이고 어떤 서비스를 제공하는지 봐야 됨)
         }
     }
 
