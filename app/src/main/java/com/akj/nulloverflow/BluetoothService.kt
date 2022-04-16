@@ -9,7 +9,14 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
+import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+
+private val TAG = "GATTConnect"
 
 //bluetooth_scanning 부분에서 gattCallback 구현 및 다른 기능들을 구현할 수 있지만 다른 class 파일 만들어서 관리
 //bluetooth_scanning 에서 넘어오는 bluetoothGatt 값은 처음에는 null
@@ -35,10 +42,14 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                     //MAC Address를 보내주는 것이 아닌 Minor 값을 꺼내서 사용해야할듯
                     //해당하는 bluetoothGatt 객체에서 제공하는 서비스를 검색하고 해당 기기에서 서비스가 가능한 목록들을 onServicesDiscovered 함수에 콜백을 시켜준다.
                     //Minor 값만 얻어오는 거면 굳이 서비스 필요 없을거 같긴한데, 연결정보랑 Minor 값 받아와서 확인하면 될거같음
+                    //test
+                    Log.i(TAG, "연결상태 확인, onServiceDiscoverd 콜백")
                     bluetoothGatt?.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     //연결이 끊겼을 때 연결이 끊겼다는 정보를 보내주고 disconnect 해주면 됨
+                    //test
+                    Log.i(TAG, "GATT서버 연결 해제")
                     disconnect()
                 }
             }
@@ -50,11 +61,35 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
 
             //위 onConnectionStateChange 함수에서 연결상태가 되면 discoverServices()가 호출이 되는데 호출되면 해당 콜백함수를 호출하게 됨
             //각 기기마다 UUID가 있음(사용 목적에 따라서, 기기마다 제공하는 서비스가 존재함 -> 확인 후 어떤 UUID이고 어떤 서비스를 제공하는지 봐야 됨)
+            //test
+            when (status) {
+                //gatt 연결이 성공적으로 이루어 졌을 경우
+                BluetoothGatt.GATT_SUCCESS -> {
+                    //test
+                    Log.i(TAG, "GATT연결 성공")
+                    handleToast(device?.address + "에 연결 성공")
+
+                }
+                else -> {
+                    handleToast(device?.address + "에 연결 실패")
+                }
+            }
         }
     }
 
+    //toast message test를 위한 핸들러 함수
+    private fun handleToast(msg: String) {
+        val handler: Handler = object : Handler(Looper.getMainLooper()) {
+            override fun getMessageName(message: Message): String {
+                return super.getMessageName(message)
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
+        }
+        //test
+        handler.obtainMessage().sendToTarget()
+    }
     //연결이 끊기게 되면 GATT 서버와의 통신을 종료해야하는데, 이 기능을 해주는 함수
-   private fun disconnect() {
+    private fun disconnect() {
         //targetSdk가 안드로이드 S(API Lever 31)버전보다 높은 경우 필요함
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)

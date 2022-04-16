@@ -250,6 +250,7 @@ class bluetooth_scanning : AppCompatActivity() {
             var device: BluetoothDevice = bleList[position]
             holder.apply {
                 bleClickConn(device, View.OnClickListener {
+
                     //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
                     deviceScan(false)
                     //처음 bleGatt의 값은 null
@@ -271,7 +272,7 @@ class bluetooth_scanning : AppCompatActivity() {
     inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bleClickConn(device: BluetoothDevice, onClickListener: View.OnClickListener) {
             //위 onBindViewHolder에서 만든 onclickListener가 전달되면 실행함
-            binding.root.setOnClickListener(onClickListener)
+            binding.bleList.setOnClickListener(onClickListener)
         }
     }
 
