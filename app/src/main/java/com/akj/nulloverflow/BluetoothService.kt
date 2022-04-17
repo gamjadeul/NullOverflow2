@@ -19,7 +19,7 @@ import androidx.core.app.ActivityCompat
 private val TAG = "GATTConnect"
 
 //bluetooth_scanning 부분에서 gattCallback 구현 및 다른 기능들을 구현할 수 있지만 다른 class 파일 만들어서 관리
-//bluetooth_scanning 에서 넘어오는 bluetoothGatt 값은 처음에는 null
+//bluetooth_scanning 에서 넘어오는 bluetoothGatt 값은 처음에는 null -> 계속해서 null 값임
 class BluetoothService(private val context: Context, private var bluetoothGatt: BluetoothGatt?) {
 
     //처음 생성자에 의해 생성될 때 device의 값은 null이며 이후 gatt라는 함수에서 할당됨
@@ -34,6 +34,13 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
+            }
+
+            Log.i(TAG, "onConnectionStateChange is called, status: $status")
+            Log.i(TAG, "onConnectionStateChange is called newState: $newState")
+            Log.i(TAG, "onConnectionStateChange is called device's address: ${device?.address}")
+            if (bluetoothGatt == null) {
+                Log.i(TAG, "bluetoothGatt is null")
             }
 
             when (newState) {
@@ -66,7 +73,7 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 //gatt 연결이 성공적으로 이루어 졌을 경우
                 BluetoothGatt.GATT_SUCCESS -> {
                     //test
-                    Log.i(TAG, "GATT연결 성공")
+                    Log.i(TAG, "GATT연결 성공, status: $status")
                     handleToast(device?.address + "에 연결 성공")
 
                 }
@@ -75,29 +82,34 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 }
             }
         }
-    }
 
-    //toast message test를 위한 핸들러 함수
-    private fun handleToast(msg: String) {
-        val handler: Handler = object : Handler(Looper.getMainLooper()) {
-            override fun getMessageName(message: Message): String {
-                return super.getMessageName(message)
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        //toast message test를 위한 핸들러 함수
+        private fun handleToast(msg: String) {
+            val handler: Handler = object : Handler(Looper.getMainLooper()) {
+                override fun getMessageName(message: Message): String {
+                    return super.getMessageName(message)
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
             }
+            //test
+            handler.obtainMessage().sendToTarget()
         }
-        //test
-        handler.obtainMessage().sendToTarget()
-    }
-    //연결이 끊기게 되면 GATT 서버와의 통신을 종료해야하는데, 이 기능을 해주는 함수
-    private fun disconnect() {
-        //targetSdk가 안드로이드 S(API Lever 31)버전보다 높은 경우 필요함
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
-        }
-        if(bluetoothGatt != null) {
-            bluetoothGatt?.disconnect()
-            bluetoothGatt?.close()
-            bluetoothGatt = null
+        //연결이 끊기게 되면 GATT 서버와의 통신을 종료해야하는데, 이 기능을 해주는 함수
+        private fun disconnect() {
+            //targetSdk가 안드로이드 S(API Lever 31)버전보다 높은 경우 필요함
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
+            }
+            Log.i(TAG, "disconnect method enter")
+            //bluetoothGatt 값이 여전히 null인듯
+            if(bluetoothGatt != null) {
+                bluetoothGatt?.disconnect()
+                bluetoothGatt?.close()
+                bluetoothGatt = null
+                if(bluetoothGatt == null) {
+                    Log.i(TAG, "disconnect and close complete, bluetoothGatt is null")
+                }
+            }
         }
     }
 
@@ -108,14 +120,20 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
         }
+
+        this.device = device
+
         //gatt를 사용하는데 존재하는 133번 요류 -> API_LEVEL 23이상에서 사용되는 함수를 사용해야하므로 사용하는 조건문
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //4번째 인자로 오는 값은 GATT 연결에 사용할 모드
-            device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
+            Log.i(TAG, "BluetoothService.gatt is called (higher than VERSION_CODE M(sdk23))")
+            Log.i(TAG, "device is ${device.address}")
+            Log.i(TAG, "This device version is ${Build.VERSION.SDK_INT}")
+            bluetoothGatt = device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
         } else {
-            device.connectGatt(context,false ,gattCallback)
+            Log.i(TAG, "BluetoothService.gatt is called (lower than VERSION_CODE M(sdk23))")
+            bluetoothGatt = device.connectGatt(context,false, gattCallback)
         }
-        this.device = device
         return bluetoothGatt
     }
 }

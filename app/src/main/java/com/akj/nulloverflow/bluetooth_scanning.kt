@@ -10,6 +10,7 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BlendModeColorFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -69,8 +70,8 @@ class bluetooth_scanning : AppCompatActivity() {
     private val SCAN_PERIOD: Long = 10000
     //Scan한 블루투스 기기를 저장할 array list
     private var deviceList = ArrayList<BluetoothDevice>()
-    //scan상태를 알려주는 변수
-    private var scan_state:Boolean = false
+    //scan상태를 알려주는 변수 -> 별로 필요 없을듯?
+    //private var scan_state:Boolean = false
     //to schedule messages and runnables to be executed at some point in the future, 특정시간 이후에 스캔을 멈추는 동작을 하기위해 설정
     private val handler = Handler(Looper.getMainLooper())
     //GATT서버에 연결하기위해 필요
@@ -107,6 +108,7 @@ class bluetooth_scanning : AppCompatActivity() {
         }
 
         //scan 실패했을 때 호출되는 call back methods
+        //스캔을 중지했다가 다시 스캔하면 오류가 남, errorCode는 2
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
             Toast.makeText(this@bluetooth_scanning, "검색에 실패했습니다. Error : ${errorCode}", Toast.LENGTH_SHORT).show()
@@ -132,6 +134,26 @@ class bluetooth_scanning : AppCompatActivity() {
         //리사이클러뷰에 선언한 아답터 연결, 레이아웃 매니저로는 LinearLayout 사용
         binding.bleRecycler.adapter = reAdapter
         binding.bleRecycler.layoutManager = LinearLayoutManager(this)
+
+        //아탑터에 interface로 선언한 ItemClickListener 등록시켜주고 onClick override
+        reAdapter.setItemClickListener(object: ItemClickListener{
+            override fun onClick(view: View, position: Int) {
+                //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
+                //deviceScan이 아닌 스캔 버튼이 눌린 것 같은 효과를 줘야될 듯
+                binding.scanBtn.isChecked = false
+                deviceScan(false)
+
+                //scan 멈춘 후 일정 시간 이후에 연결시도도
+                //해당하는 위치의 기기를 가져옴
+                val device = deviceList[position]
+
+                //100밀리초 이후에 연결시도
+                Thread.sleep(600)
+
+                //BluetoothService로 값이 넘어갈 때 bleGatt가 null임임
+                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
+            }
+        })
 
         //scanBtn에 setOnCheckedChangeListener달아서 scan할 수 있도록
         binding.scanBtn.setOnCheckedChangeListener { _, isChecked ->
@@ -222,8 +244,13 @@ class bluetooth_scanning : AppCompatActivity() {
     inner class BleCustomAdapter: RecyclerView.Adapter<BleHolder>() {
         //어댑터 내부에서 사용할 디바이스 정보가 담긴 ArrayList
         private var bleList = ArrayList<BluetoothDevice>()
-        //ItemClickListener를 위한 변수
-        private lateinit var itemClickListener: AdapterView.OnItemClickListener
+        //ItemClickListener를 위한 변수 지연초기화 사용
+        private lateinit var itemClickListener: ItemClickListener
+
+        //클릭 리스너를 등록해주는 메소드
+        fun setItemClickListener(itemClickListener: ItemClickListener) {
+            this.itemClickListener = itemClickListener
+        }
 
         /*
         인터페이스는 inner class안에 구현이 불가능함 - inner class 안에는 다른 inner class만 구현이 가능
@@ -247,10 +274,18 @@ class bluetooth_scanning : AppCompatActivity() {
                 holder.binding.bleAddTxt.text = bleList[position].address
             }
             //특정 위치에 있는 device정보를 저장하기위해 사용
-            var device: BluetoothDevice = bleList[position]
+            //var device: BluetoothDevice = bleList[position]
+
+            //clickListener는 문제없이 등록이 되었으나 연결이 바로 해제됨
+            holder.itemView.setOnClickListener {
+                itemClickListener.onClick(it, position)
+            }
+
+            /*
             holder.apply {
                 bleClickConn(device)
             }
+             */
         }
 
         override fun getItemCount(): Int {
@@ -264,6 +299,7 @@ class bluetooth_scanning : AppCompatActivity() {
     }
 
     inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root) {
+        /*
         fun bleClickConn(device: BluetoothDevice) {
             //위 onBindViewHolder에서 만든 onclickListener가 전달되면 실행함
             binding.root.setOnClickListener {
@@ -274,6 +310,11 @@ class bluetooth_scanning : AppCompatActivity() {
                 bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
             }
         }
+         */
+    }
+
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int)
     }
 
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능 -> startLeScan이 depercated 됨
@@ -289,14 +330,15 @@ class bluetooth_scanning : AppCompatActivity() {
         }
         if(state) {
             handler.postDelayed({
-                scan_state = false
+                //scan_state = false
+                binding.scanBtn.isChecked = false
                 bluetoothAdapter?.bluetoothLeScanner?.stopScan(bleScanCallBack)
             }, SCAN_PERIOD)
-            scan_state = true
+            //scan_state = true
             deviceList.clear()
             bluetoothAdapter?.bluetoothLeScanner?.startScan(bleScanCallBack)
         } else {
-            scan_state = false
+            //scan_state = false
             bluetoothAdapter?.bluetoothLeScanner?.stopScan(bleScanCallBack)
         }
     }

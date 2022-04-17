@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_margin="10dp"
-    android:background="?attr/selectableItemBackground"
-    android:orientation="vertical"
     app:cardCornerRadius="15dp">
-    <!--클릭 애니메이션-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
