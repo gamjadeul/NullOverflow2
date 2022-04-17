@@ -249,13 +249,7 @@ class bluetooth_scanning : AppCompatActivity() {
             //특정 위치에 있는 device정보를 저장하기위해 사용
             var device: BluetoothDevice = bleList[position]
             holder.apply {
-                bleClickConn(device, View.OnClickListener {
-
-                    //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
-                    deviceScan(false)
-                    //처음 bleGatt의 값은 null
-                    bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
-                })
+                bleClickConn(device)
             }
         }
 
@@ -270,9 +264,15 @@ class bluetooth_scanning : AppCompatActivity() {
     }
 
     inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bleClickConn(device: BluetoothDevice, onClickListener: View.OnClickListener) {
+        fun bleClickConn(device: BluetoothDevice) {
             //위 onBindViewHolder에서 만든 onclickListener가 전달되면 실행함
-            binding.bleList.setOnClickListener(onClickListener)
+            binding.root.setOnClickListener {
+
+                //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
+                deviceScan(false)
+                //처음 bleGatt의 값은 null
+                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
+            }
         }
     }
 
