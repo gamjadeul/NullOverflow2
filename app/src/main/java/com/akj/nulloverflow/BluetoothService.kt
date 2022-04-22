@@ -38,7 +38,7 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
 
             Log.i(TAG, "onConnectionStateChange is called, status: $status")
             Log.i(TAG, "onConnectionStateChange is called newState: $newState")
-            Log.i(TAG, "onConnectionStateChange is called device's address: ${device?.address}")
+            Log.i(TAG, "onConnectionStateChange is called device's name: ${device?.name}")
             if (bluetoothGatt == null) {
                 Log.i(TAG, "bluetoothGatt is null")
             }
@@ -66,6 +66,10 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
+            }
+
             //위 onConnectionStateChange 함수에서 연결상태가 되면 discoverServices()가 호출이 되는데 호출되면 해당 콜백함수를 호출하게 됨
             //각 기기마다 UUID가 있음(사용 목적에 따라서, 기기마다 제공하는 서비스가 존재함 -> 확인 후 어떤 UUID이고 어떤 서비스를 제공하는지 봐야 됨)
             //test
@@ -74,26 +78,25 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 BluetoothGatt.GATT_SUCCESS -> {
                     //test
                     Log.i(TAG, "GATT연결 성공, status: $status")
-                    handleToast(device?.address + "에 연결 성공")
+                    handleToast(device?.name + "에 연결 성공")
 
                 }
                 else -> {
-                    handleToast(device?.address + "에 연결 실패")
+                    handleToast(device?.name + "에 연결 실패")
                 }
             }
         }
 
         //toast message test를 위한 핸들러 함수
         private fun handleToast(msg: String) {
-            val handler: Handler = object : Handler(Looper.getMainLooper()) {
-                override fun getMessageName(message: Message): String {
-                    return super.getMessageName(message)
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                }
-            }
+            val handler = Handler(Looper.getMainLooper())
+
             //test
-            handler.obtainMessage().sendToTarget()
+            handler.post {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
         }
+
         //연결이 끊기게 되면 GATT 서버와의 통신을 종료해야하는데, 이 기능을 해주는 함수
         private fun disconnect() {
             //targetSdk가 안드로이드 S(API Lever 31)버전보다 높은 경우 필요함

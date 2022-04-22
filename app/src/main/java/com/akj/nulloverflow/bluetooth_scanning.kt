@@ -252,13 +252,6 @@ class bluetooth_scanning : AppCompatActivity() {
             this.itemClickListener = itemClickListener
         }
 
-        /*
-        인터페이스는 inner class안에 구현이 불가능함 - inner class 안에는 다른 inner class만 구현이 가능
-        interface OnItemClickListener {
-            fun OnClick(v: View, posiotion: Int)
-        }
-         */
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleHolder {
             val binding = BluetoothListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -273,19 +266,11 @@ class bluetooth_scanning : AppCompatActivity() {
                 holder.binding.bleNameTxt.text = bleList[position].name
                 holder.binding.bleAddTxt.text = bleList[position].address
             }
-            //특정 위치에 있는 device정보를 저장하기위해 사용
-            //var device: BluetoothDevice = bleList[position]
 
-            //clickListener는 문제없이 등록이 되었으나 연결이 바로 해제됨
             holder.itemView.setOnClickListener {
                 itemClickListener.onClick(it, position)
             }
 
-            /*
-            holder.apply {
-                bleClickConn(device)
-            }
-             */
         }
 
         override fun getItemCount(): Int {
@@ -298,20 +283,7 @@ class bluetooth_scanning : AppCompatActivity() {
         }
     }
 
-    inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root) {
-        /*
-        fun bleClickConn(device: BluetoothDevice) {
-            //위 onBindViewHolder에서 만든 onclickListener가 전달되면 실행함
-            binding.root.setOnClickListener {
-
-                //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
-                deviceScan(false)
-                //처음 bleGatt의 값은 null
-                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
-            }
-        }
-         */
-    }
+    inner class BleHolder(val binding: BluetoothListBinding): RecyclerView.ViewHolder(binding.root)
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
