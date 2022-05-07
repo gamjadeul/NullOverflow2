@@ -25,7 +25,8 @@
         android:theme="@style/Theme.NullOverflow">
         <activity
             android:name=".bluetooth_scanning"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.Scanning"/>
         <activity
             android:name=".Occupied_room"
             android:exported="false" />

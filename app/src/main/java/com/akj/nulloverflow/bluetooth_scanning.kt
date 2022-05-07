@@ -8,47 +8,32 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BlendModeColorFilter
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
 import com.akj.nulloverflow.databinding.BluetoothListBinding
 
-/*
-//해당 어플리케이션의 context를 사용하기위해 선언
-class MyApplication : Application() {
-    init {
-        instance = this
-    }
-
-    companion object {
-        private lateinit var instance: MyApplication
-        fun ApplicationContext(): Context {
-            return instance.applicationContext
-        }
-    }
-}
-*/
+private val TAG = "bluetooth_scanning"
 
 class bluetooth_scanning : AppCompatActivity() {
 
     val binding by lazy { ActivityBluetoothScanningBinding.inflate(layoutInflater) }
+
     //startActiviyForResult가 deprecated되었기 때문에 필요한 변수
     private lateinit var resultActivity: ActivityResultLauncher<Intent>
 
@@ -74,16 +59,20 @@ class bluetooth_scanning : AppCompatActivity() {
     //private var scan_state:Boolean = false
     //to schedule messages and runnables to be executed at some point in the future, 특정시간 이후에 스캔을 멈추는 동작을 하기위해 설정
     private val handler = Handler(Looper.getMainLooper())
-    //GATT서버에 연결하기위해 필요
+    //GATT서버에 연결하기위해 필요 -> null로 초기화 시켜주기 때문에 매번 destroy되고 null이 되는 문제 존재
     private var bleGatt: BluetoothGatt ?= null
+    //연결된 디바이스의 이름을 저장할 때 사용할 변수
+    private lateinit var device:BluetoothDevice
     //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
     private val bleScanCallBack = object : ScanCallback() {
         //BLE의 advertisement가 발견되었을 때 호출됨(필터 없이 호출되는 경우, 필터가 있어도 호출되는 경우가 존재)
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
 
+            Log.i(TAG, "onScanResult 콜백됨")
             result?.let {
                 if(!deviceList.contains(result.device)){
+                    Log.i(TAG, "디바이스 리스트가 contain")
                     deviceList.add(result.device)
                     //리사이클러 뷰에 변화된거 띄워주는 코드 작성
                     reAdapter.notifyDataSetChanged()
@@ -94,6 +83,7 @@ class bluetooth_scanning : AppCompatActivity() {
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
 
+            Log.i(TAG, "onBatchScanResults 콜백됨")
             //결과로 받은 result가 null이 아닐때
             //results의 타입 = ScanResult for Bluetooth LE scan. BluetoothDevice타입과는 다르므로 results에서 해당하는 타입을 추출해야함
             results?.let {
@@ -119,13 +109,22 @@ class bluetooth_scanning : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        Log.i(TAG, "onCreate 최초실행")
+        //액션바 타이틀, 뒤로가기 버튼 추가
+        setSupportActionBar(binding.deviceToolBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.deviceToolBar.title = "디바이스"
+
+        //연결해제버튼 bleGatt가(연결한 bluetooth기기가 없으면) null이면 연결해제 버튼이 안보임
+        if(bleGatt == null){
+            binding.disconnBtn.visibility = View.INVISIBLE
+        }
+
         //위치권한 검사, 권한 없으면 권한 요청
         if(!checkPermission(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))){
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION)
         }
-
-        //처음에는 글씨 안보이게
-        binding.progressTxt.visibility = View.INVISIBLE
 
         //리사이클러뷰 아답터 생성
         reAdapter = BleCustomAdapter()
@@ -145,21 +144,36 @@ class bluetooth_scanning : AppCompatActivity() {
 
                 //scan 멈춘 후 일정 시간 이후에 연결시도도
                 //해당하는 위치의 기기를 가져옴
-                val device = deviceList[position]
+                device = deviceList[position]
 
                 //100밀리초 이후에 연결시도
-                Thread.sleep(600)
+                //Thread.sleep(600)
 
-                //BluetoothService로 값이 넘어갈 때 bleGatt가 null임임
+                //for test
+                if(bleGatt == null){
+                    Log.i(TAG, "before connection bluetooth Gatt Is Null")
+                } else {
+                    Log.i(TAG, "before connection bluetooth Gatt Is Not Null: ${bleGatt.toString()}")
+                }
+
+                //BluetoothService로 값이 넘어갈 때 bleGatt가 null임
                 bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
+
+                //for test
+                if(bleGatt == null){
+                    Log.i(TAG, "after connection bluetooth Gatt Is Null")
+                } else {
+                    binding.disconnBtn.visibility = View.VISIBLE
+                    Log.i(TAG, "after connection bluetooth Gatt Is Not Null: ${bleGatt.toString()}")
+                }
+
+
             }
         })
 
         //scanBtn에 setOnCheckedChangeListener달아서 scan할 수 있도록
         binding.scanBtn.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
-                //스캔중일때는 위에있는 스캔중... text가 보이도록
-                binding.progressTxt.visibility = View.VISIBLE
                 //스캔 시작을 하는 부분 블루투스 사용 가능한지 불가능한지 띄워줘야함
                 //블루투스가 사용 불가능한 상태라면 사용 가능하게 바꿔줘야 함
                 if(bluetoothAdapter?.isEnabled == false) {
@@ -178,15 +192,45 @@ class bluetooth_scanning : AppCompatActivity() {
                 //블루투스 사용 확인 부분 끝
 
                 //스캔 시작
+                Log.i(TAG, "스캔 시작")
                 deviceScan(true)
 
             } else {
-                //스캔중이 아닐때는 위에 스캔중...이라는 text가 안보이도록
-                binding.progressTxt.visibility = View.INVISIBLE
                 //스캔을 멈추는 부분
                 deviceScan(false)
             }
         }
+
+        //연결해제 버튼 눌렀을 시
+        binding.disconnBtn.setOnClickListener {
+            bleGatt?.disconnect()
+            binding.disconnBtn.visibility = View.INVISIBLE
+        }
+    }
+
+    //res/menu/scanning_menu에 작성한 toolbar를 사용
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.scanning_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    //액션바 옵션 눌렸을 때
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
+            ActivityCompat.requestPermissions(this@bluetooth_scanning, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
+        }
+        when(item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            R.id.main_option -> {
+                val intent = Intent(this, MainOption::class.java)
+                intent.putExtra("bluetooth_info", device.name)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
@@ -199,8 +243,28 @@ class bluetooth_scanning : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
+            ActivityCompat.requestPermissions(this@bluetooth_scanning, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
+        }
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("블루투스 연결 해제")
+            .setMessage("블루투스의 연결이 해제됩니다.")
+            .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, id ->
+                bleGatt?.disconnect()
+                super.onBackPressed()
+
+            })
+            .setNegativeButton("취소", DialogInterface.OnClickListener { dialogInterface, id ->
+
+            })
+        builder.create().show()
+    }
+
     //permission확인해주는 함수
-    fun checkPermission(permission_list: Array<String>): Boolean {
+    internal fun checkPermission(permission_list: Array<String>): Boolean {
         //bluetoothAdapter.bluetoothLeScanner.startScan() 매서드가 Marshmallow이상 버전에서만 사용이 가능함
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for(permission in permission_list) {
@@ -244,6 +308,7 @@ class bluetooth_scanning : AppCompatActivity() {
     inner class BleCustomAdapter: RecyclerView.Adapter<BleHolder>() {
         //어댑터 내부에서 사용할 디바이스 정보가 담긴 ArrayList
         private var bleList = ArrayList<BluetoothDevice>()
+
         //ItemClickListener를 위한 변수 지연초기화 사용
         private lateinit var itemClickListener: ItemClickListener
 
@@ -267,6 +332,7 @@ class bluetooth_scanning : AppCompatActivity() {
                 holder.binding.bleAddTxt.text = bleList[position].address
             }
 
+
             holder.itemView.setOnClickListener {
                 itemClickListener.onClick(it, position)
             }
@@ -278,7 +344,7 @@ class bluetooth_scanning : AppCompatActivity() {
         }
 
         //내부에서 사용하는 BleList변수가 private이기 때문에 값을 설정해주기위한 함수
-        fun setBleList(deviceList: ArrayList<BluetoothDevice>) {
+        internal fun setBleList(deviceList: ArrayList<BluetoothDevice>) {
             this.bleList = deviceList
         }
     }
@@ -307,6 +373,7 @@ class bluetooth_scanning : AppCompatActivity() {
                 bluetoothAdapter?.bluetoothLeScanner?.stopScan(bleScanCallBack)
             }, SCAN_PERIOD)
             //scan_state = true
+            Log.i(TAG, "디바이스 리스트 clean호출 후 startScan호출")
             deviceList.clear()
             bluetoothAdapter?.bluetoothLeScanner?.startScan(bleScanCallBack)
         } else {

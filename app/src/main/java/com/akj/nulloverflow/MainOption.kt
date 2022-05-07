@@ -25,6 +25,7 @@ class MainOption : AppCompatActivity() {
         var user_name = binding.userName.setText()
          */
 
+        binding.seatTxt.text = intent.getStringExtra("bluetooth_info")
         //spinner에서 사용할 아이템 목록
         var purpose_data = listOf("사용목적을 선택해 주세요.", "공부", "회의", "스터디")
         var adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, purpose_data)
@@ -69,13 +70,13 @@ class MainOption : AppCompatActivity() {
 
     //parameter = The menu item that was selected. This value cannot be null.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
+        return when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
-                return true
+                true
             }
             else -> {
-                return super.onOptionsItemSelected(item)
+                super.onOptionsItemSelected(item)
             }
         }
     }

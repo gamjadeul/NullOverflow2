@@ -86,38 +86,20 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 }
             }
         }
+    }
 
-        //toast message test를 위한 핸들러 함수
-        private fun handleToast(msg: String) {
-            val handler = Handler(Looper.getMainLooper())
+    //toast message test를 위한 핸들러 함수
+    private fun handleToast(msg: String) {
+        val handler = Handler(Looper.getMainLooper())
 
-            //test
-            handler.post {
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        //연결이 끊기게 되면 GATT 서버와의 통신을 종료해야하는데, 이 기능을 해주는 함수
-        private fun disconnect() {
-            //targetSdk가 안드로이드 S(API Lever 31)버전보다 높은 경우 필요함
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
-            }
-            Log.i(TAG, "disconnect method enter")
-            //bluetoothGatt 값이 여전히 null인듯
-            if(bluetoothGatt != null) {
-                bluetoothGatt?.disconnect()
-                bluetoothGatt?.close()
-                bluetoothGatt = null
-                if(bluetoothGatt == null) {
-                    Log.i(TAG, "disconnect and close complete, bluetoothGatt is null")
-                }
-            }
+        //test
+        handler.post {
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
 
     //Nullable 언어로 생성자를 만든 경우 똑같이 Nullable을 리턴해줘야 오류가 나지 않음
-    fun gatt(device: BluetoothDevice): BluetoothGatt? {
+    internal fun gatt(device: BluetoothDevice): BluetoothGatt? {
         //역시 GATT관련 기능 사용하기 위해서는 permission check 필요(S버전 이상을 target으로 잡고있는 경우)
         //For apps targeting Build.VERSION_CODES#S or or higher, this requires the Manifest.permission#BLUETOOTH_CONNECT permission -> 버전 체크하는 코드 있어야될 듯?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -138,5 +120,24 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
             bluetoothGatt = device.connectGatt(context,false, gattCallback)
         }
         return bluetoothGatt
+    }
+
+    //연결이 끊기게 되면 GATT 서버와의 통신을 종료해야하는데, 이 기능을 해주는 함수
+    internal fun disconnect() {
+        //targetSdk가 안드로이드 S(API Lever 31)버전보다 높은 경우 필요함
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
+        }
+        Log.i(TAG, "disconnect method enter")
+        //bluetoothGatt 값이 여전히 null인듯
+        if(bluetoothGatt != null) {
+            bluetoothGatt?.disconnect()
+            bluetoothGatt?.close()
+            bluetoothGatt = null
+            if(bluetoothGatt == null) {
+                Log.i(TAG, "disconnect and close complete, bluetoothGatt is null")
+                handleToast("블루투스 연결해제 완료")
+            }
+        }
     }
 }
