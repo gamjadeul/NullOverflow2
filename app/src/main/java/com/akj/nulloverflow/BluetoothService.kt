@@ -36,12 +36,15 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
             }
 
-            Log.i(TAG, "onConnectionStateChange is called, status: $status")
-            Log.i(TAG, "onConnectionStateChange is called newState: $newState")
-            Log.i(TAG, "onConnectionStateChange is called device's name: ${device?.name}")
+            //Log.i(TAG, "onConnectionStateChange is called, status: $status")
+            //Log.i(TAG, "onConnectionStateChange is called newState: $newState")
+            //Log.i(TAG, "onConnectionStateChange is called device's name: ${device?.name}")
+            /*
             if (bluetoothGatt == null) {
                 Log.i(TAG, "bluetoothGatt is null")
             }
+
+             */
 
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
@@ -50,13 +53,13 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                     //해당하는 bluetoothGatt 객체에서 제공하는 서비스를 검색하고 해당 기기에서 서비스가 가능한 목록들을 onServicesDiscovered 함수에 콜백을 시켜준다.
                     //Minor 값만 얻어오는 거면 굳이 서비스 필요 없을거 같긴한데, 연결정보랑 Minor 값 받아와서 확인하면 될거같음
                     //test
-                    Log.i(TAG, "연결상태 확인, onServiceDiscoverd 콜백")
+                    //Log.i(TAG, "연결상태 확인, onServiceDiscoverd 콜백")
                     bluetoothGatt?.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     //연결이 끊겼을 때 연결이 끊겼다는 정보를 보내주고 disconnect 해주면 됨
                     //test
-                    Log.i(TAG, "GATT서버 연결 해제")
+                    //Log.i(TAG, "GATT서버 연결 해제")
                     disconnect()
                 }
             }
@@ -77,7 +80,7 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 //gatt 연결이 성공적으로 이루어 졌을 경우
                 BluetoothGatt.GATT_SUCCESS -> {
                     //test
-                    Log.i(TAG, "GATT연결 성공, status: $status")
+                    //Log.i(TAG, "GATT연결 성공, status: $status")
                     handleToast(device?.name + "에 연결 성공")
 
                 }
@@ -85,6 +88,11 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                     handleToast(device?.name + "에 연결 실패")
                 }
             }
+        }
+
+        //나중에 readRemoteRssi함수 호출되면 해당 콜백함수가 호출됨
+        override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
+            super.onReadRemoteRssi(gatt, rssi, status)
         }
     }
 
@@ -111,12 +119,12 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
         //gatt를 사용하는데 존재하는 133번 요류 -> API_LEVEL 23이상에서 사용되는 함수를 사용해야하므로 사용하는 조건문
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //4번째 인자로 오는 값은 GATT 연결에 사용할 모드
-            Log.i(TAG, "BluetoothService.gatt is called (higher than VERSION_CODE M(sdk23))")
-            Log.i(TAG, "device is ${device.address}")
-            Log.i(TAG, "This device version is ${Build.VERSION.SDK_INT}")
+            //Log.i(TAG, "BluetoothService.gatt is called (higher than VERSION_CODE M(sdk23))")
+            //Log.i(TAG, "device is ${device.address}")
+            //Log.i(TAG, "This device version is ${Build.VERSION.SDK_INT}")
             bluetoothGatt = device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
         } else {
-            Log.i(TAG, "BluetoothService.gatt is called (lower than VERSION_CODE M(sdk23))")
+            //Log.i(TAG, "BluetoothService.gatt is called (lower than VERSION_CODE M(sdk23))")
             bluetoothGatt = device.connectGatt(context,false, gattCallback)
         }
         return bluetoothGatt
@@ -128,14 +136,14 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
         }
-        Log.i(TAG, "disconnect method enter")
+        //Log.i(TAG, "disconnect method enter")
         //bluetoothGatt 값이 여전히 null인듯
         if(bluetoothGatt != null) {
             bluetoothGatt?.disconnect()
             bluetoothGatt?.close()
             bluetoothGatt = null
             if(bluetoothGatt == null) {
-                Log.i(TAG, "disconnect and close complete, bluetoothGatt is null")
+                //Log.i(TAG, "disconnect and close complete, bluetoothGatt is null")
                 handleToast("블루투스 연결해제 완료")
             }
         }

@@ -1,6 +1,7 @@
 package com.akj.nulloverflow
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
@@ -66,13 +67,15 @@ class bluetooth_scanning : AppCompatActivity() {
     //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
     private val bleScanCallBack = object : ScanCallback() {
         //BLE의 advertisement가 발견되었을 때 호출됨(필터 없이 호출되는 경우, 필터가 있어도 호출되는 경우가 존재)
+        //ScanResult에서 getRssi(Int)정보 가져올 수 있음
+        @SuppressLint("NotifyDataSetChanged")
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
 
-            Log.i(TAG, "onScanResult 콜백됨")
+            //Log.i(TAG, "onScanResult 콜백됨")
             result?.let {
                 if(!deviceList.contains(result.device)){
-                    Log.i(TAG, "디바이스 리스트가 contain")
+                    //Log.i(TAG, "디바이스 리스트가 contain")
                     deviceList.add(result.device)
                     //리사이클러 뷰에 변화된거 띄워주는 코드 작성
                     reAdapter.notifyDataSetChanged()
@@ -80,10 +83,11 @@ class bluetooth_scanning : AppCompatActivity() {
             }
         }
         //Batch scan result가 전달될 때 call back됨(lowpower옵션을 주거나 필터를 적용했을 때 호출됨, 한번에 하나의 값에만 반응을 하는 것이 아닌 전체를 묶어서 뿌려줌)
+        @SuppressLint("NotifyDataSetChanged")
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
 
-            Log.i(TAG, "onBatchScanResults 콜백됨")
+            //Log.i(TAG, "onBatchScanResults 콜백됨")
             //결과로 받은 result가 null이 아닐때
             //results의 타입 = ScanResult for Bluetooth LE scan. BluetoothDevice타입과는 다르므로 results에서 해당하는 타입을 추출해야함
             results?.let {
@@ -109,7 +113,7 @@ class bluetooth_scanning : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        Log.i(TAG, "onCreate 최초실행")
+        //Log.i(TAG, "onCreate 최초실행")
         //액션바 타이틀, 뒤로가기 버튼 추가
         setSupportActionBar(binding.deviceToolBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -228,6 +232,11 @@ class bluetooth_scanning : AppCompatActivity() {
                 val intent = Intent(this, MainOption::class.java)
                 intent.putExtra("bluetooth_info", device.name)
                 startActivity(intent)
+            }
+            //좌석 검색을 할 수 있어야 할 것 같음 -> 좌석을 확인 하기 위해서는 메인 화면에 나갔다 와야되는 문제가 존재
+            R.id.seat_search -> {
+                //intent달아서 확인할 수 있는 화면으로 이동하는 코드
+                //처음에 만든 MainActivity로 이동하면 계속 무한히 스택에 쌓이는 문제가 있을 듯
             }
         }
         return super.onOptionsItemSelected(item)
@@ -373,7 +382,7 @@ class bluetooth_scanning : AppCompatActivity() {
                 bluetoothAdapter?.bluetoothLeScanner?.stopScan(bleScanCallBack)
             }, SCAN_PERIOD)
             //scan_state = true
-            Log.i(TAG, "디바이스 리스트 clean호출 후 startScan호출")
+            //Log.i(TAG, "디바이스 리스트 clean호출 후 startScan호출")
             deviceList.clear()
             bluetoothAdapter?.bluetoothLeScanner?.startScan(bleScanCallBack)
         } else {
