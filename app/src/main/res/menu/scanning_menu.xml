@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:icon="@drawable/ic_baseline_info_24"
+            android:id="@+id/main_option"
+            android:title="사용자 메뉴"
+            />
+        <item
+            android:icon="@drawable/ic_baseline_table_restaurant_24"
+            android:id="@+id/seat_search"
+            android:title="좌석 확인"
+            />
+    </group>
+</menu>

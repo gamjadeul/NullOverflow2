@@ -147,11 +147,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //로그아웃 후에도 해당 액티비티에 남아 있어야 함, 사용자 정보와 이메일 등이 지워진 상태로
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.main_option -> {
-                startActivity(Intent(this, MainOption::class.java))
-                binding.mainDrawer.closeDrawers()
-                return true
-            }
             R.id.log_out -> {
                 //이 위에 파이어베이스 관련해서 로그아웃하는 코드가 들어가야 됨
                 binding.mainDrawer.closeDrawers()
