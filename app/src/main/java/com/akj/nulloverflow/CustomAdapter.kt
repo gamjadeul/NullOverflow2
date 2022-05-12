@@ -7,6 +7,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.SeatRecylcerBinding
 
+/*
+    여기서 MAC주소 활용하는거 써야될 듯, MAC주소 비교해서 사용중이면 BackGround바뀌도록
+    또한 Click이벤트가 여기에 있으니 MAC주소로 통신해서 사용중인지 아닌지에 따라 어느 화면을 띄워줄 지
+ */
 class CustomAdapter: RecyclerView.Adapter<Holder>() {
 
     var listData = mutableListOf<Info>()
@@ -21,7 +25,6 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
         val info = listData.get(position)
         holder.setInfo(info)
 
-        //테라스 자리 누르면 사용중인지 아닌지에 따라 화면이 변경되어야 하는데 이건 블루투스 모듈 오면 추가 해야할 듯 함
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, Empty_room::class.java)
             ContextCompat.startActivity(holder.itemView.context, intent, null)

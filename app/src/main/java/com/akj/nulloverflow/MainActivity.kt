@@ -67,70 +67,86 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val info: MutableList<Info> = mutableListOf()
         var floor: Int = 0
         lateinit var where: String
+        lateinit var mac: String
         for (no in 1..15) {
             when(no) {
                 in 1..3 -> {
                     floor = 2
                     if (no % 3 == 1) {
                         where = "계단쪽 테라스"
+                        mac = "7C:EC:79:FE:ED:71"
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
+                        mac = "4C:24:98:78:1C:7B"
                     }
                     else {
                         where = "연구실 옆 테라스"
+                        mac = ""
                     }
                 }
                 in 4..6 -> {
                     floor = 3
                     if (no % 3 == 1) {
                         where = "계단쪽 테라스"
+                        mac = ""
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
+                        mac = ""
                     }
                     else {
                         where = "연구실 옆 테라스"
+                        mac = ""
                     }
                 }
                 in 7..9 -> {
                     floor = 4
                     if (no % 3 == 1) {
                         where = "계단쪽 테라스"
+                        mac = ""
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
+                        mac = ""
                     }
                     else {
                         where = "연구실 옆 테라스"
+                        mac = ""
                     }
                 }
                 in 10..12 -> {
                     floor = 5
                     if (no % 3 == 1) {
                         where = "계단쪽 테라스"
+                        mac = ""
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
+                        mac = ""
                     }
                     else {
                         where = "연구실 옆 테라스"
+                        mac = ""
                     }
                 }
                 else -> {
                     floor = 6
                     if (no % 3 == 1) {
                         where = "계단쪽 테라스"
+                        mac = ""
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
+                        mac = ""
                     }
                     else {
                         where = "연구실 옆 테라스"
+                        mac = ""
                     }
                 }
             }
-            var cur_info = Info(floor, where)
+            var cur_info = Info(floor, where, mac)
             info.add(cur_info)
         }
         return info
