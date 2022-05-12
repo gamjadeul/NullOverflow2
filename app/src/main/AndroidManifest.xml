@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.akj.nulloverflow" >
+    package="com.akj.nulloverflow">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -25,7 +25,7 @@ If your app targets Android 9 or lower, you can declare
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NullOverflow"
-        android:usesCleartextTraffic="true" >
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".SignupConfirm"
             android:exported="false" />
@@ -50,13 +50,13 @@ If your app targets Android 9 or lower, you can declare
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.Main"/>
+            android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".Signup"
             android:exported="false" />
         <activity
             android:name=".Signin"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

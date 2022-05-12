@@ -65,7 +65,12 @@ public class Signup extends AppCompatActivity {
                 if(!(input_Password.equals(input_RepeatPassword))){
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
-                //일치하면 실행
+                else if(input_name.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if(input_department.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "학과를 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
                 else {
                     AWSMobileClient.getInstance().signUp(input_email, input_Password, attributes, null, new Callback<SignUpResult>() {
                         @Override
