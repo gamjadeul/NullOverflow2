@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-nulloverflow-dev-171432-authRole",
+      "UnauthRoleArn": "arn:aws:iam::967787155564:role/amplify-nulloverflow-dev-171432-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::967787155564:role/amplify-nulloverflow-dev-171432-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-nulloverflow-dev-171432-deployment",
+      "UnauthRoleName": "amplify-nulloverflow-dev-171432-unauthRole",
+      "StackName": "amplify-nulloverflow-dev-171432",
+      "StackId": "arn:aws:cloudformation:us-east-1:967787155564:stack/amplify-nulloverflow-dev-171432/8fe37ea0-d1cb-11ec-b048-128111ab84c3",
+      "AmplifyAppId": "d1cbiedkllrlqv"
+    },
+    "categories": {
+      "auth": {
+        "nulloverflowd01a84dc": {
+          "userPoolId": "us-east-1_IhBxlP9DJ",
+          "userPoolName": "NullOverflow",
+          "webClientId": "4nv8s31qs69gjmhqdr1kq1gtel",
+          "nativeClientId": "36ndkcae0nqk1rmdl544rt03ms"
+        }
+      }
+    }
+  }
+}

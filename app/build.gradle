@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.akj.nulloverflow"
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -49,6 +49,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.3'
     implementation 'com.google.firebase:firebase-database:20.0.4'
     implementation 'com.google.android.gms:play-services-tasks:18.0.1'
+    // SDK 초기화를 위한 모바일 클라이언트
+    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.8.+@aar') { transitive = true }
+    // 로그인을 위한 Cognito UserPools
+    implementation('com.amazonaws:aws-android-sdk-auth-userpools:2.8.+@aar') { transitive = true }
+    // 로그인 UI 라이브러리
+    implementation('com.amazonaws:aws-android-sdk-auth-ui:2.8.+@aar') { transitive = true }
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "nulloverflowd01a84dc": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

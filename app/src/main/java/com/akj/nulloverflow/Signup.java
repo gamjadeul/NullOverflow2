@@ -1,6 +1,8 @@
 package com.akj.nulloverflow;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,28 +13,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.results.SignUpResult;
+import com.amazonaws.mobile.client.results.UserCodeDeliveryDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Signup extends AppCompatActivity {
 
     private EditText signup_email, signup_password, signup_repeat_password, signup_name, signup_department;
     private Button signup_btn1;                 //회원가입 버튼
-    private FirebaseAuth mFirebaseAuth;
-    private DatabaseReference mDatabaseRef;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        String TAG = Signup.class.getSimpleName();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("NullOverflow");
 
         signup_email = findViewById(R.id.signup_email);
         signup_password = findViewById(R.id.signup_password);
@@ -48,30 +51,52 @@ public class Signup extends AppCompatActivity {
             public void onClick(View view) {
                 String input_email = signup_email.getText().toString();
                 String input_Password = signup_password.getText().toString();
-                /*String input_RepeatPassword = signup_repeat_password.getText().toString();
+                String input_RepeatPassword = signup_repeat_password.getText().toString();
                 String input_name = signup_name.getText().toString();
-                String input_department = signup_department.getText().toString();*/
+                String input_department = signup_department.getText().toString();
 
-                mFirebaseAuth.createUserWithEmailAndPassword(input_email, input_Password).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
-                            UserAccount account = new UserAccount();
-                            account.setIdToken(firebaseUser.getUid());
-                            account.setEmail(firebaseUser.getEmail());
-                            account.setPassword(input_Password);
-                            /*account.setName(input_name);
-                            account.setDepartment(input_department);*/
 
-                            mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
-                            Toast.makeText(Signup.this,"Successfully signed up", Toast.LENGTH_SHORT).show();
+                //필요한 유저 정보
+                final Map<String, String> attributes = new HashMap<>();
+                attributes.put("name", input_name);
+                attributes.put("email", input_email);
+                attributes.put("custom:department", input_department);
+                //재입력한 비밀번호가 일치하지 않을때 토스트
+                if(!(input_Password.equals(input_RepeatPassword))){
+                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
+                //일치하면 실행
+                else {
+                    AWSMobileClient.getInstance().signUp(input_email, input_Password, attributes, null, new Callback<SignUpResult>() {
+                        @Override
+                        public void onResult(final SignUpResult signUpResult) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d(TAG, "Sign-up callback state: " + signUpResult.getConfirmationState());
+                                    if (!signUpResult.getConfirmationState()) {
+
+                                        final UserCodeDeliveryDetails details = signUpResult.getUserCodeDeliveryDetails();
+
+                                        Toast.makeText(getApplicationContext(), "인증 메일을 보냈습니다.: " + details.getDestination(), Toast.LENGTH_SHORT).show();
+                                        //번호 인증 액티비티로 이동
+                                        Intent intent = new Intent(Signup.this, SignupConfirm.class);
+                                        intent.putExtra("email", input_email);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Sign-up done", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
-                        else{
-                            Toast.makeText(Signup.this,"Failed to sign up", Toast.LENGTH_SHORT).show();
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.e(TAG, "Sign-up error", e);
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }
