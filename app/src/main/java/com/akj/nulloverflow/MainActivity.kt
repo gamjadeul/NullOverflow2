@@ -10,7 +10,11 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.akj.nulloverflow.databinding.ActivityMainBinding
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.amazonaws.mobile.client.Callback
+import com.amazonaws.mobile.client.UserStateDetails
 import com.google.android.material.navigation.NavigationView
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -154,6 +158,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.log_out -> {
+                AWSMobileClient.getInstance()
+                    .initialize(applicationContext, object : Callback<UserStateDetails?> {
+                        override fun onResult(result: UserStateDetails?) {
+                            AWSMobileClient.getInstance().signOut()
+                            val intent = Intent(this@MainActivity, Signin::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+
+                        override fun onError(e: Exception) {}
+                    })
                 //이 위에 파이어베이스 관련해서 로그아웃하는 코드가 들어가야 됨
                 binding.mainDrawer.closeDrawers()
             }
