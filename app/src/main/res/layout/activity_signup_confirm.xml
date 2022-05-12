@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupConfirm">
+
+
+    <TextView
+        android:id="@+id/confirm_text1"
+        android:layout_width="207dp"
+        android:layout_height="59dp"
+        android:layout_marginBottom="52dp"
+        android:ems="10"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_text2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/confirm_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="59dp"
+        android:ems="10"
+        android:hint="Verification Code"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_btn"
+        app:layout_constraintStart_toStartOf="@+id/confirm_text1"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_text1" />
+
+    <Button
+        android:id="@+id/confirm_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="195dp"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:text="Confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_text2" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginEnd="47dp"
+        android:layout_marginBottom="46dp"
+        android:text="Verification code sent to your Email"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_text1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
