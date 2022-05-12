@@ -57,6 +57,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     //리사이클러 뷰에서 사용될 데이터를 만들어주는 함수
+    //여기에서 MAC주소의 삽입이 필요한데, 이유는 DB에 MAC주소로 접근하기 때문임
+    /*
+        현재 존재하는 2개의 BLE기기
+        2층계단 -> 7C:EC:79:FE:ED:71
+        2층중앙 -> 4C:24:98:78:1C:7B
+     */
     private fun loadData(): MutableList<Info> {
         val info: MutableList<Info> = mutableListOf()
         var floor: Int = 0
