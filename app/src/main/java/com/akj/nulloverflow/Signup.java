@@ -66,12 +66,12 @@ public class Signup extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
                 //이름을 입력하지 않았을 때 토스트
-                else if(!(input_name.isEmpty())){
-                    Toast.makeText(getApplicationContext(), "이름을 입력하시오.", Toast.LENGTH_SHORT).show();
+                else if(input_name.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
                 //학과를 입력하지 않았을 때 토스트
-                else if(!(input_department.isEmpty())){
-                    Toast.makeText(getApplicationContext(),"학과를 입력하시오.",Toast.LENGTH_SHORT).show();
+                else if(input_department.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "학과를 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     AWSMobileClient.getInstance().signUp(input_email, input_Password, attributes, null, new Callback<SignUpResult>() {
