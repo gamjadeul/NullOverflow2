@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.SeatRecylcerBinding
 
 /*
-    여기서 MAC주소 활용하는거 써야될 듯, MAC주소 비교해서 사용중이면 BackGround바뀌도록
+    여기서 MAC주소 활용하는거 써야될 듯, MAC주소 비교해서 사용중이면 BackGround바뀌도록 -> 이거는 onCreate하든가 없음, MainActivity에서 해준다음에 정보 넘겨줘야 되나?
     또한 Click이벤트가 여기에 있으니 MAC주소로 통신해서 사용중인지 아닌지에 따라 어느 화면을 띄워줄 지
+    MAC주소 전체 Scan해와서 JSON추출 후 MAC주소에 해당하는게 true면 background변경해줌
  */
 class CustomAdapter: RecyclerView.Adapter<Holder>() {
 
