@@ -2,6 +2,8 @@ package com.akj.nulloverflow;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -61,8 +63,17 @@ public class Signup extends AppCompatActivity {
                 attributes.put("name", input_name);
                 attributes.put("email", input_email);
                 attributes.put("custom:department", input_department);
+
+                //이메일이 입력되지 않았을 때
+                if(input_email.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "이메일을 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
+                //비밀번호 조건
+                else if(input_Password.length() < 6){
+                    Toast.makeText(getApplicationContext(), "비밀번호는 6자리 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
+                }
                 //재입력한 비밀번호가 일치하지 않을때 토스트
-                if(!(input_Password.equals(input_RepeatPassword))){
+                else if(!(input_Password.equals(input_RepeatPassword))){
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
                 //이름을 입력하지 않았을 때 토스트
@@ -101,9 +112,29 @@ public class Signup extends AppCompatActivity {
                         @Override
                         public void onError(Exception e) {
                             Log.e(TAG, "Sign-up error", e);
+
+                            if (e.getMessage().contains("An account with the given email already exists.")){
+                                errorMessage("주어진 이메일을 가진 계정이 이미 존재합니다.");
+                            }
+                            else if (e.getMessage().contains("Value at 'username' failed to satisfy constraint")){
+                                errorMessage("이메일을 입력해주세요.");
+                            }
+                            else if (e.getMessage().contains("Invalid email address format.")){
+                                errorMessage("잘못된 이메일 주소 형식입니다.");
+                            }
                         }
+
                     });
                 }
+            }
+            public void errorMessage(String message){
+                Handler mHandler = new Handler(Looper.getMainLooper());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

@@ -1,7 +1,10 @@
 package com.akj.nulloverflow;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -92,7 +96,56 @@ public class Signin extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception e) {
+
                         Log.e(TAG, "Sign-in error", e);
+
+                        if (e.getMessage().contains("Request does not contain valid parameters")) {
+                            errorMessage("아이디와 비밀번호를 입력해주세요.");
+                        } else if (e.getMessage().contains("Incorrect username or password.")) {
+                            errorMessage("아이디와 비밀번호가 일치하지 않습니다.");
+                        } else if (e.getMessage().contains("User does not exist.")) {
+                            errorMessage("존재하지 않는 아이디입니다.");
+                        } else if (e.getMessage().contains("Unable to execute HTTP request")) {
+                            errorMessage("네트워크가 원활하지 않습니다.\n네트워크 연결 상태를 확인하세요.");
+                        } else if (e.getMessage().contains("User is not confirmed.")) {
+
+
+                            // 다이어로그 생성
+                            Handler mHandler = new Handler(Looper.getMainLooper());
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog.Builder ad = new AlertDialog.Builder(Signin.this);
+                                    ad.setIcon(R.mipmap.ic_launcher);
+                                    ad.setTitle("인증 코드 미승인");
+                                    ad.setMessage("인증 코드를 승인하지 않았습니다.\n인증 코드를 승인하러 가시겠습니까?");
+
+                                    // 확인버튼
+                                    ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            // 이메일에 문제가 없으면 인증 코드 창으로 이동
+                                            Intent intent = new Intent(Signin.this, SignupConfirm.class);
+                                            intent.putExtra("email", input_email);
+                                            startActivity(intent);
+                                            finish();
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    // 취소버튼
+                                    ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    ad.show();
+                                }
+                            });
+
+                        }
                     }
                 });
 
@@ -105,6 +158,17 @@ public class Signin extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Signin.this,Signup.class);
                 startActivity(intent);
+            }
+        });
+
+    }
+
+    public void errorMessage(String message){
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
