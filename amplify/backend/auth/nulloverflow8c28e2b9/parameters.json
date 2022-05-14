@@ -1,8 +1,8 @@
 {
   "authSelections": "userPoolOnly",
-  "resourceName": "nulloverflow",
+  "resourceName": "nulloverflow8c28e2b9",
   "serviceType": "imported",
-  "region": "us-east-1",
+  "region": "ap-northeast-2",
   "usernameAttributes": [
     "email"
   ],

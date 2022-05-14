@@ -1,15 +1,25 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-nulloverflow-dev-30221-authRole",
-      "UnauthRoleArn": "arn:aws:iam::967787155564:role/amplify-nulloverflow-dev-30221-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::967787155564:role/amplify-nulloverflow-dev-30221-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-nulloverflow-dev-30221-deployment",
-      "UnauthRoleName": "amplify-nulloverflow-dev-30221-unauthRole",
-      "StackName": "amplify-nulloverflow-dev-30221",
-      "StackId": "arn:aws:cloudformation:us-east-1:967787155564:stack/amplify-nulloverflow-dev-30221/adbc3500-d21d-11ec-bdc8-1206b2a808f5",
-      "AmplifyAppId": "d2qbvyfc1docch"
+      "AuthRoleName": "amplify-nulloverflow-dev-162930-authRole",
+      "UnauthRoleArn": "arn:aws:iam::967787155564:role/amplify-nulloverflow-dev-162930-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::967787155564:role/amplify-nulloverflow-dev-162930-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-nulloverflow-dev-162930-deployment",
+      "UnauthRoleName": "amplify-nulloverflow-dev-162930-unauthRole",
+      "StackName": "amplify-nulloverflow-dev-162930",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:967787155564:stack/amplify-nulloverflow-dev-162930/988e2270-d357-11ec-addb-0a309113e81a",
+      "AmplifyAppId": "dvrhcydtbcu6l"
+    },
+    "categories": {
+      "auth": {
+        "nulloverflow8c28e2b9": {
+          "userPoolId": "ap-northeast-2_pbxx8KoR7",
+          "userPoolName": "NullOverflow",
+          "webClientId": "1aqfr4kta22p2ijo64bbr1mcvd",
+          "nativeClientId": "3uf12vtho61tmalsftm70t475k"
+        }
+      }
     }
   }
 }
