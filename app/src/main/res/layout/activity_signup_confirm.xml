@@ -9,14 +9,12 @@
 
     <TextView
         android:id="@+id/confirm_text1"
-        android:layout_width="207dp"
-        android:layout_height="59dp"
-        android:layout_marginBottom="52dp"
+        android:layout_width="211dp"
+        android:layout_height="61dp"
         android:ems="10"
         app:layout_constraintBottom_toTopOf="@+id/confirm_text2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/confirm_text2"
@@ -28,7 +26,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/confirm_btn"
         app:layout_constraintStart_toStartOf="@+id/confirm_text1"
-        app:layout_constraintTop_toBottomOf="@+id/confirm_text1" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/confirm_btn"
@@ -44,18 +42,18 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="183dp"
-        android:layout_marginEnd="47dp"
-        android:layout_marginBottom="46dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="221dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="119dp"
         android:text="Verification code sent to your Email"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/confirm_text1"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_text2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
