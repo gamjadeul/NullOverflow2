@@ -31,6 +31,9 @@ import com.akj.nulloverflow.databinding.BluetoothListBinding
 
 private val TAG = "bluetooth_scanning"
 
+/*
+    연결이 성립되는 곳이 해당 Activity이므로 해당 Activity에서 자리의 사용상태인 stat를 true로 변경시켜줘야 될듯 -> post? put?인듯
+ */
 class bluetooth_scanning : AppCompatActivity() {
 
     val binding by lazy { ActivityBluetoothScanningBinding.inflate(layoutInflater) }
@@ -49,8 +52,8 @@ class bluetooth_scanning : AppCompatActivity() {
     private lateinit var reAdapter: BleCustomAdapter
     companion object {
         //onRequestPermissionResult의 인자로 넘어갈 상수들
-        val LOCATION_PERMISSION = 100
-        val BLUETOOTH_SCAN_PERMISSION = 101
+        const val LOCATION_PERMISSION = 100
+        const val BLUETOOTH_SCAN_PERMISSION = 101
     }
     //Scan 하는 시간
     private val SCAN_PERIOD: Long = 10000
