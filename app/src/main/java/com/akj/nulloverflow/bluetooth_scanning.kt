@@ -52,8 +52,8 @@ class bluetooth_scanning : AppCompatActivity() {
     private lateinit var reAdapter: BleCustomAdapter
     companion object {
         //onRequestPermissionResult의 인자로 넘어갈 상수들
-        val LOCATION_PERMISSION = 100
-        val BLUETOOTH_SCAN_PERMISSION = 101
+        const val LOCATION_PERMISSION = 100
+        const val BLUETOOTH_SCAN_PERMISSION = 101
     }
     //Scan 하는 시간
     private val SCAN_PERIOD: Long = 10000
