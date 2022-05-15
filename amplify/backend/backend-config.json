@@ -1,6 +1,6 @@
 {
   "auth": {
-    "nulloverflow": {
+    "nulloverflow8c28e2b9": {
       "service": "Cognito",
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",
