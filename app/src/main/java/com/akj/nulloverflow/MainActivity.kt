@@ -1,5 +1,6 @@
 package com.akj.nulloverflow
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +13,7 @@ import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
 
          */
-        test?.getBleInfo("all")?.enqueue(object: Callback<BleTableData> {
+        test?.getBleInfo("all")?.enqueue(object: retrofit2.Callback<BleTableData> {
             override fun onResponse(call: Call<BleTableData>, response: Response<BleTableData>) {
                 val testList = response.body() as BleTableData
                 //여기 밖에서는 아예 second를 사용할 수 없게 됨 -> scope가 해당 class로 한정되어 있음
@@ -222,7 +221,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             val cur_info = Info(floor, where, mac, stat)
-            //Log.i("mainActivityTest", "cur_info: $cur_info")
+            Log.i("mainActivityTest", "cur_info: $cur_info")
             info.add(cur_info)
         }
         return info
@@ -232,7 +231,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         for(susInfo in sourceInfo.body){
             testMap[susInfo.mac] = susInfo.stat
         }
-        //Log.i("mainActivityTest", "추출 끝, testMap의 값: $testMap")
+        Log.i("mainActivityTest", "추출 끝, testMap의 값: $testMap")
         //notifyDataSetChange로 먼저 띄워준 다음에 정보 바꿔주는 방법은 별로 안좋은 거 같음 -> 퍼포먼스적인 측면에서는 좋겠지만 기본적으로 자리확인 어플이 정보 다 받고 확인 후 띄워주는 듯
         info = loadData()
         re_adapter = CustomAdapter()
@@ -243,7 +242,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun macFinder(macAdd: String?): Boolean {
-        //Log.i("mainActivityTest", "macFinder진입 testMap: $testMap")
+        Log.i("mainActivityTest", "macFinder진입 testMap: $testMap")
         return !(testMap[macAdd] == null || testMap[macAdd] == false)
     }
 
