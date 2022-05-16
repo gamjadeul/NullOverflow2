@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "69828864986",
-    "project_id": "nulloverflow-d064c",
-    "storage_bucket": "nulloverflow-d064c.appspot.com"
+    "project_number": "890208618727",
+    "project_id": "aws-fcm-924c1",
+    "storage_bucket": "aws-fcm-924c1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69828864986:android:273af90fb3631dec346ee3",
+        "mobilesdk_app_id": "1:890208618727:android:cffb4e329e8897cbcf7a42",
         "android_client_info": {
           "package_name": "com.akj.nulloverflow"
         }
       },
       "oauth_client": [
         {
-          "client_id": "69828864986-ak1enaaj17vdmdc4hmacuvssdj9f1j66.apps.googleusercontent.com",
+          "client_id": "890208618727-p08nuad4k8p00hqhn4n1do4muiif5mk7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB2KKmHTSc6hfwwPs7UnwPDPFR9oNtjiUw"
+          "current_key": "AIzaSyDRakv52SNyNbL5AYktqFKGYppd6fwuyJ4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "69828864986-ak1enaaj17vdmdc4hmacuvssdj9f1j66.apps.googleusercontent.com",
+              "client_id": "890208618727-p08nuad4k8p00hqhn4n1do4muiif5mk7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

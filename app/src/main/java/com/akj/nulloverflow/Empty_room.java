@@ -20,6 +20,7 @@ public class Empty_room extends AppCompatActivity {
 
         String[] empty_purpose = {"Study", "Discussion"};
 
+        final String[] selected_purpose = {""};
         Spinner spinner = findViewById(R.id.purpose);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -31,11 +32,11 @@ public class Empty_room extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                selected_purpose[0] = empty_purpose[position];
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                selected_purpose[0] = "unknown";
             }
         });
 
@@ -45,7 +46,7 @@ public class Empty_room extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent bluetooth_intent = new Intent(Empty_room.this, bluetooth_scanning.class);
-
+                bluetooth_intent.putExtra("purpose", selected_purpose[0]);
                 startActivity(bluetooth_intent);
             }
         });
