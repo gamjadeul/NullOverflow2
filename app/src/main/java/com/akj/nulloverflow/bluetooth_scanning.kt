@@ -243,6 +243,8 @@ class bluetooth_scanning : AppCompatActivity() {
             R.id.seat_search -> {
                 //intent달아서 확인할 수 있는 화면으로 이동하는 코드
                 //처음에 만든 MainActivity로 이동하면 계속 무한히 스택에 쌓이는 문제가 있을 듯
+                val intent = Intent(this, RoomCheck::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
