@@ -54,6 +54,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     //gson 컨버터 -> JSON객체의 변환
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //레트로핏2 로깅 인터셉터
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+
     // SDK 초기화를 위한 모바일 클라이언트
     implementation('com.amazonaws:aws-android-sdk-mobile-client:2.8.+@aar') { transitive = true }
     // 로그인을 위한 Cognito UserPools

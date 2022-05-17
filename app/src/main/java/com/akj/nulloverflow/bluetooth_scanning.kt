@@ -163,8 +163,11 @@ class bluetooth_scanning : AppCompatActivity() {
                     Log.i(TAG, "before connection bluetooth Gatt Is Not Null: ${bleGatt.toString()}")
                 }
 
+                //test
+                Log.i(TAG, "Empty_room Activity에서 전달된 문자열: " + intent.getStringExtra("purpose").toString())
+
                 //BluetoothService로 값이 넘어갈 때 bleGatt가 null임
-                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt).gatt(device)
+                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt, intent.getStringExtra("purpose").toString()).gatt(device)
 
                 //for test
                 if(bleGatt == null){

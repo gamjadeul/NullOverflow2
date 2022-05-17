@@ -15,13 +15,17 @@ import android.os.Message
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 private val TAG = "GATTConnect"
 
 //bluetooth_scanning 부분에서 gattCallback 구현 및 다른 기능들을 구현할 수 있지만 다른 class 파일 만들어서 관리
 //bluetooth_scanning 에서 넘어오는 bluetoothGatt 값은 처음에는 null -> 계속해서 null 값임
-class BluetoothService(private val context: Context, private var bluetoothGatt: BluetoothGatt?) {
-
+//bluetooth_scanning에서 호출되는 class 이므로 intent로 값을 받아오거나 할 수는 없음
+class BluetoothService(private val context: Context, private var bluetoothGatt: BluetoothGatt?, private val purpose: String) {
     //처음 생성자에 의해 생성될 때 device의 값은 null이며 이후 gatt라는 함수에서 할당됨
     private var device: BluetoothDevice? = null
     //GATT연결에 사용될 GATT callback함수
@@ -54,6 +58,28 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                     //Minor 값만 얻어오는 거면 굳이 서비스 필요 없을거 같긴한데, 연결정보랑 Minor 값 받아와서 확인하면 될거같음
                     //test
                     //Log.i(TAG, "연결상태 확인, onServiceDiscoverd 콜백")
+
+                    //연결이 완전히 완료되는 경우 PUT명령어로 stat의 값을 변경시켜줘야됨, 처음에 입력받았던 purpose의 값 역시 변경시켜줘야됨
+                    //bluetooth_scanning에서 받아온 device의 mac주소를 다음과 같이 하면 얻을 수 있음 API호출에 필요한 Query -> ?mac=...&purpose=...&stat(purpose를 받아와야됨, stat는 true로 넣으면 됨)
+                    //test
+                    Log.i(TAG, "bluetooth_scanning에서 인자로 받은 문자열: $purpose")
+                    Log.i(TAG, "보낼 기기의 mac주소 / " + device?.address.toString())
+
+                    /*원래대로라면 https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com/bti/bluetooth_update?mac=~ 이런식으로 들어가여되는데
+                    https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com/bti/bluetooth_update까지만 들어가고 뒤에 쿼리문은 안들어감
+
+                     */
+                    val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+                    val result = updateRequest?.updateInfo(device?.address.toString(), purpose, true)?.enqueue(object: Callback<ResponseBody> {
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            Log.i(TAG, "응답 성공: ${response.raw()}")
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.i(TAG, "응답 실패, Errored by: $t")
+                        }
+                    })
+
                     bluetoothGatt?.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
@@ -81,6 +107,7 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                 BluetoothGatt.GATT_SUCCESS -> {
                     //test
                     //Log.i(TAG, "GATT연결 성공, status: $status")
+
                     handleToast(device?.name + "에 연결 성공")
 
                 }
@@ -88,11 +115,6 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                     handleToast(device?.name + "에 연결 실패")
                 }
             }
-        }
-
-        //나중에 readRemoteRssi함수 호출되면 해당 콜백함수가 호출됨
-        override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
-            super.onReadRemoteRssi(gatt, rssi, status)
         }
     }
 
@@ -143,6 +165,17 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
             bluetoothGatt?.close()
             bluetoothGatt = null
             if(bluetoothGatt == null) {
+                //연결이 해제됐을 때는 stat의 값을 false로 바꿔주고 purpose의 값 역시 ""로 바꿔줘야 될 듯
+                val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+                val result = updateRequest?.updateInfo(device?.address.toString(), "", false)?.enqueue(object: Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        Log.i(TAG, "응답 성공: ${response.raw()}")
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.i(TAG, "응답 실패, Errored by: $t")
+                    }
+                })
                 //Log.i(TAG, "disconnect and close complete, bluetoothGatt is null")
                 handleToast("블루투스 연결해제 완료")
             }
