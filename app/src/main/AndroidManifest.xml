@@ -26,7 +26,10 @@ If your app targets Android 9 or lower, you can declare
         android:supportsRtl="true"
         android:theme="@style/Theme.NullOverflow"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".RoomCheck"
+            android:exported="false"
+            android:theme="@style/AppTheme.RoomCheck"/>
         <activity
             android:name=".SignupConfirm"
             android:exported="false" />

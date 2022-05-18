@@ -70,7 +70,7 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
 
                      */
                     val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-                    val result = updateRequest?.updateInfo(device?.address.toString(), purpose, true)?.enqueue(object: Callback<ResponseBody> {
+                    val result = updateRequest?.updateInfo(device?.address.toString(), "unknown", purpose, true)?.enqueue(object: Callback<ResponseBody> {
                         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                             Log.i(TAG, "응답 성공: ${response.raw()}")
                         }
@@ -167,7 +167,7 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
             if(bluetoothGatt == null) {
                 //연결이 해제됐을 때는 stat의 값을 false로 바꿔주고 purpose의 값 역시 ""로 바꿔줘야 될 듯
                 val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-                val result = updateRequest?.updateInfo(device?.address.toString(), "", false)?.enqueue(object: Callback<ResponseBody> {
+                val result = updateRequest?.updateInfo(device?.address.toString(), "unknown","", false)?.enqueue(object: Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         Log.i(TAG, "응답 성공: ${response.raw()}")
                     }

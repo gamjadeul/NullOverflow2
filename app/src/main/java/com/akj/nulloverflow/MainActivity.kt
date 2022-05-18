@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //private var testList: BleTableData? = null
     private var testMap = mutableMapOf<String, Boolean>()
-    lateinit var re_adapter: CustomAdapter
+    private lateinit var re_adapter: CustomAdapter
     lateinit var info: MutableList<Info>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +92,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.mainNavigation.setNavigationItemSelectedListener(this)
         //
 
+        //새로고침 버튼 눌렀을 때 Activity 새로고침침
+       binding.refreshBtn.setOnClickListener {
+           finish()
+           overridePendingTransition(0, 0)
+           startActivity(intent)
+           overridePendingTransition(0, 0)
+        }
         //Log.i("mainActivityTest", "찾아보기${testList?.body?.find { "mac" == "7C:EC:79:FE:ED:71" }}")
 
        /*
