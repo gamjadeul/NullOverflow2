@@ -229,14 +229,15 @@ class bluetooth_scanning : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !checkPermission(arrayOf(Manifest.permission.BLUETOOTH_SCAN))) {
             ActivityCompat.requestPermissions(this@bluetooth_scanning, arrayOf(Manifest.permission.BLUETOOTH_SCAN), BLUETOOTH_SCAN_PERMISSION)
         }
-        when(item?.itemId) {
+        when(item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true
             }
             R.id.main_option -> {
                 val intent = Intent(this, MainOption::class.java)
-                intent.putExtra("bluetooth_info", device.name)
+                intent.putExtra("bluetooth_name", device.name)
+                intent.putExtra("bluetooth_address", device.address)
                 startActivity(intent)
             }
             //좌석 검색을 할 수 있어야 할 것 같음 -> 좌석을 확인 하기 위해서는 메인 화면에 나갔다 와야되는 문제가 존재
