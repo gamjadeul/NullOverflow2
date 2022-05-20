@@ -4,12 +4,20 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import com.akj.nulloverflow.databinding.ActivityMainOptionBinding
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.create
+
+private const val TAG = "MainOptionTAG"
 
 class MainOption : AppCompatActivity() {
 
@@ -25,7 +33,10 @@ class MainOption : AppCompatActivity() {
         var user_name = binding.userName.setText()
          */
 
-        binding.seatTxt.text = intent.getStringExtra("bluetooth_info")
+        binding.seatTxt.text = intent.getStringExtra("bluetooth_name")
+        val deviceAddress = intent.getStringExtra("bluetooth_address")
+        Log.i(TAG, "deviceAddress: $deviceAddress")
+
         //spinner에서 사용할 아이템 목록
         //해당 정보는 AWS에 반영이 되어야 함(사용목적의 변경을 위해서 필요)
         var purpose_data = listOf("사용목적을 선택해 주세요.", "공부", "회의", "스터디")
@@ -34,7 +45,17 @@ class MainOption : AppCompatActivity() {
 
         binding.purposeSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                binding.purposeTxt.text = purpose_data.get(position)
+                binding.purposeTxt.text = purpose_data[position]
+                val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+                val result = updateRequest?.updateInfo(deviceAddress.toString(), "unknown", purpose_data[position], true)?.enqueue(object: Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        Log.i(TAG, "응답 성공: ${response.raw()}")
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.i(TAG, "응답 실패, Errored by: $t")
+                    }
+                })
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
