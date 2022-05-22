@@ -45,6 +45,7 @@ public class Signin extends AppCompatActivity {
                     case SIGNED_IN:
                         Intent intent = new Intent(Signin.this, MainActivity.class);
                         startActivity(intent);
+                        finish();
                         break;
                     default:
                         break;
