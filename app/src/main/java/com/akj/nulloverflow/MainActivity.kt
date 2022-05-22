@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.akj.nulloverflow.databinding.ActivityMainBinding
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
+import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.UserStateDetails
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
@@ -66,6 +67,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             override fun onFailure(call: Call<BleTableData>, t: Throwable) {
                 Log.i("mainActivityTest", "호출 실패 onFailure / t : $t")
+            }
+        })
+
+        AWSMobileClient.getInstance().initialize(applicationContext, object: Callback<UserStateDetails> {
+            override fun onResult(result: UserStateDetails?) {
+                //로그인이 되어있는 상태라면
+                if(result?.userState == UserState.SIGNED_IN) {
+                    Log.i("mainActivityTest", "UserStateDetails?.details / ${result?.details.toString()}")
+                    Log.i("mainActivityTest", "AWSMobileClient.getInstance().identityId / ${AWSMobileClient.getInstance().identityId}")
+                    Log.i("mainActivityTest", "AWSMobileClient.getInstance().userAttributes / $" +
+                            "${AWSMobileClient.getInstance().userAttributes}")
+                    Log.i("mainActivityTest", "AWSMobileClient.getInstance().username / ${AWSMobileClient.getInstance().username}")
+                }
+            }
+
+            //로그인이 되어있지 않고 에러가 나는 상황
+            override fun onError(e: Exception?) {
+                Log.i("mainActivityTest", "AWSMobileClient initialize error / $e")
             }
         })
 
@@ -228,7 +247,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             val cur_info = Info(floor, where, mac, stat)
-            Log.i("mainActivityTest", "cur_info: $cur_info")
+            //Log.i("mainActivityTest", "cur_info: $cur_info")
             info.add(cur_info)
         }
         return info
@@ -249,7 +268,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun macFinder(macAdd: String?): Boolean {
-        Log.i("mainActivityTest", "macFinder진입 testMap: $testMap")
+        //Log.i("mainActivityTest", "macFinder진입 testMap: $testMap")
         return !(testMap[macAdd] == null || testMap[macAdd] == false)
     }
 
