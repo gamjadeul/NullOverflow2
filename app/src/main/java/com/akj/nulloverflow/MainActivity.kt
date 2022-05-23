@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.akj.nulloverflow.databinding.ActivityMainBinding
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
+import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.UserStateDetails
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var testMap = mutableMapOf<String, Boolean>()
     private lateinit var re_adapter: CustomAdapter
     lateinit var info: MutableList<Info>
+    lateinit var userAttr: MutableMap<String, String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +60,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 //값이 없어지는게 아니라 비동기 작업이라 화면을 띄워주기 전에는 완료가 안되는듯
                 //해당 부분을 거쳐야 무조건 화면에 리사이클러 뷰 띄울 수 있게 해줘야할 듯
                 //setNotifySetChanged로 알려주면 되려나
-                Log.i("mainActivityTest", "호출 성공 onResponse / response: ${response.body()}")
-                Log.i("mainActivityTest", "호출 성공 onResponse / response: ${response.raw()}")
-                Log.i("mainActivityTest", "호출 성공 onResponse / testList: ${testList.body}")
+                //Log.i("mainActivityTest", "호출 성공 onResponse / response: ${response.body()}")
+                //Log.i("mainActivityTest", "호출 성공 onResponse / response: ${response.raw()}")
+                //Log.i("mainActivityTest", "호출 성공 onResponse / testList: ${testList.body}")
                 extractInfo(testList)
                 //Log.i("mainActivityTest", "호출 성공 onResponse / testList: ${second?.body}")
             }
@@ -100,6 +103,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
            overridePendingTransition(0, 0)
         }
         //Log.i("mainActivityTest", "찾아보기${testList?.body?.find { "mac" == "7C:EC:79:FE:ED:71" }}")
+
+
+        //Log.i("mainActivityTest", "AWSMobileClient.getInstance() / ${AWSMobileClient.getInstance().toString()}")
+        AWSMobileClient.getInstance().initialize(applicationContext, object: Callback<UserStateDetails> {
+            override fun onResult(result: UserStateDetails?) {
+                //로그인이 되어있는 상태라면
+                if(result?.userState == UserState.SIGNED_IN) {
+                    //Log.i("mainActivityTest", "UserStateDetails?.details / ${result.details}")
+                    //Log.i("mainActivityTest", "AWSMobileClient.getInstance().userAttributes / ${AWSMobileClient.getInstance().userAttributes}")
+                    userAttr = AWSMobileClient.getInstance().userAttributes
+                    Log.i("mainActivityTest", "userAttr.email / ${userAttr["email"]}")
+                    val navHeaderView = binding.mainNavigation.getHeaderView(0)
+                    val navIdText = navHeaderView.findViewById<TextView>(R.id.testId)
+                    navIdText.isSelected = true
+                    val navNameText = navHeaderView.findViewById<TextView>(R.id.testName)
+                    //UI 변경의 경우 Main Thread에서 이루어져야 함
+                    runOnUiThread {
+                        navNameText.text = userAttr["name"]
+                        navIdText.text = userAttr["email"]
+                    }
+                }
+            }
+
+            //로그인이 되어있지 않고 에러가 나는 상황
+            override fun onError(e: Exception?) {
+                Log.i("mainActivityTest", "AWSMobileClient initialize error / $e")
+            }
+        })
 
        /*
         이 부분이 navigation의 header 텍스트를 결정할 부분 setText의 파라미터로 Auth 혹은 Stor에서 받아온 자료가 넘어가야함
@@ -228,7 +259,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             val cur_info = Info(floor, where, mac, stat)
-            Log.i("mainActivityTest", "cur_info: $cur_info")
+            //Log.i("mainActivityTest", "cur_info: $cur_info")
             info.add(cur_info)
         }
         return info
@@ -242,14 +273,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //notifyDataSetChange로 먼저 띄워준 다음에 정보 바꿔주는 방법은 별로 안좋은 거 같음 -> 퍼포먼스적인 측면에서는 좋겠지만 기본적으로 자리확인 어플이 정보 다 받고 확인 후 띄워주는 듯
         info = loadData()
         re_adapter = CustomAdapter()
+        //Log.i("mainActivityTest", ":re_adapter의 listData 초기화 / $info")
         re_adapter.listData = info
+        //Log.i("mainActivityTest", "re_adapter의 userAttrInfo초기화 / $userAttr")
+        //re_adapter.userAttrInfo = userAttr
         binding.seatRecycler.adapter = re_adapter
         binding.seatRecycler.layoutManager = LinearLayoutManager(this)
         //Log.i("mainActivityTest", "추출 후 어댑터 등록 완료")
     }
 
     private fun macFinder(macAdd: String?): Boolean {
-        Log.i("mainActivityTest", "macFinder진입 testMap: $testMap")
+        //Log.i("mainActivityTest", "macFinder진입 testMap: $testMap")
         return !(testMap[macAdd] == null || testMap[macAdd] == false)
     }
 

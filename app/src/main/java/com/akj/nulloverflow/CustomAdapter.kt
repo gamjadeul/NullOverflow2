@@ -18,6 +18,9 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
 
     var listData = mutableListOf<Info>()
 
+    //사용자 정보를 저장해줘야됨 해당 mutable Map에 있는 정보는 intent에 달아서 다른 Activity로 넘겨줘야됨
+    //var userAttrInfo = mutableMapOf<String, String>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = SeatRecylcerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -44,6 +47,9 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
                 ContextCompat.startActivity(holder.itemView.context, occupiedRoomIntent, null)
             }
             else{
+                //사용자 이메일 정보 넘겨줌 -> 굳이 넘기고 넘겨서 할 필요 없이 연결 됐으면 AWS클라에서 받아오는게 나을듯?
+                //emptyRoomIntent.putExtra("userEmail", userAttrInfo["email"])
+                //emptyRoomIntent.putExtra("userName", userAttrInfo["name"])
                 ContextCompat.startActivity(holder.itemView.context, emptyRoomIntent, null)
             }
         }

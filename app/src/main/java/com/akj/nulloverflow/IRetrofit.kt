@@ -33,6 +33,7 @@ interface IRetrofit {
 
     @PUT("/bti/bluetooth_update")
     fun updateInfo(@Query("mac") searchMac: String,
+                   @Query("email") userEmail: String?,
                    @Query("location") fixedLocation: String,
                    @Query("purpose") updatePur: String,
                    @Query("stat") updateStat: Boolean) : Call<ResponseBody>

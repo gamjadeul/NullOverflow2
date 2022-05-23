@@ -28,6 +28,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityBluetoothScanningBinding
 import com.akj.nulloverflow.databinding.BluetoothListBinding
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.amazonaws.mobile.client.Callback
+import com.amazonaws.mobile.client.UserState
+import com.amazonaws.mobile.client.UserStateDetails
+import java.lang.Exception
 
 private val TAG = "bluetooth_scanning"
 
@@ -40,6 +45,10 @@ class bluetooth_scanning : AppCompatActivity() {
 
     //startActiviyForResult가 deprecated되었기 때문에 필요한 변수
     private lateinit var resultActivity: ActivityResultLauncher<Intent>
+
+    //이전 Activity에서 사용자 정보를 받아서 저장하기 위해 선언한 변수
+    //private lateinit var userName: String
+    private lateinit var userEmail: String
 
     //블루투스 아답터 가져옴
     private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
@@ -123,6 +132,22 @@ class bluetooth_scanning : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.deviceToolBar.title = "디바이스"
 
+        //이전 Activity에서 intent로 받은 유저정보 저장
+        AWSMobileClient.getInstance().initialize(applicationContext, object: Callback<UserStateDetails> {
+            override fun onResult(result: UserStateDetails?) {
+                if(result?.userState == UserState.SIGNED_IN) {
+                    userEmail = AWSMobileClient.getInstance().userAttributes["email"].toString()
+                }
+            }
+
+            override fun onError(e: Exception?) {
+                Log.i(TAG, "AWSMobileClient Error / $e")
+            }
+        })
+
+        //userEmail = intent.getStringExtra("userEmail").toString()
+        //userName = intent.getStringExtra("userName").toString()
+
         //연결해제버튼 bleGatt가(연결한 bluetooth기기가 없으면) null이면 연결해제 버튼이 안보임
         if(bleGatt == null){
             binding.disconnBtn.visibility = View.INVISIBLE
@@ -165,9 +190,11 @@ class bluetooth_scanning : AppCompatActivity() {
 
                 //test
                 Log.i(TAG, "Empty_room Activity에서 전달된 문자열: " + intent.getStringExtra("purpose").toString())
+                //Log.i(TAG, "Empty_room Activity에서 전달된 문자열: ${intent.getStringExtra("userEmail")}")
+                //Log.i(TAG, "Empty_room Activity에서 전달된 문자열: ${intent.getStringExtra("userName")}")
 
                 //BluetoothService로 값이 넘어갈 때 bleGatt가 null임
-                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt, intent.getStringExtra("purpose").toString()).gatt(device)
+                bleGatt = BluetoothService(this@bluetooth_scanning, bleGatt, intent.getStringExtra("purpose").toString(), userEmail).gatt(device)
 
                 //for test
                 if(bleGatt == null){
@@ -238,6 +265,8 @@ class bluetooth_scanning : AppCompatActivity() {
                 val intent = Intent(this, MainOption::class.java)
                 intent.putExtra("bluetooth_name", device.name)
                 intent.putExtra("bluetooth_address", device.address)
+                //intent.putExtra("userEmail", userEmail)
+                //intent.putExtra("userName", userName)
                 startActivity(intent)
             }
             //좌석 검색을 할 수 있어야 할 것 같음 -> 좌석을 확인 하기 위해서는 메인 화면에 나갔다 와야되는 문제가 존재

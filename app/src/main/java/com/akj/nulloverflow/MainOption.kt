@@ -2,8 +2,10 @@ package com.akj.nulloverflow
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.icu.lang.UCharacter.JoiningGroup.TAH
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -11,27 +13,58 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import com.akj.nulloverflow.databinding.ActivityMainOptionBinding
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.amazonaws.mobile.client.UserState
+import com.amazonaws.mobile.client.UserStateDetails
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.create
+import java.lang.Exception
 
 private const val TAG = "MainOptionTAG"
 
 class MainOption : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainOptionBinding.inflate(layoutInflater) }
+    private var userEmail: String? = null
+    private var userName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        /*
-        이 부분은 옵션창에서 이름이랑 ID 받아와서 적용시켜주는 부분
-        var user_id = binding.userId.setText()
-        var user_name = binding.userName.setText()
-         */
+        //Log.i(TAG, "bluetooth_scanning에서 받은 문자열: ${intent.getStringExtra("userEmail")}")
+        //Log.i(TAG, "bluetooth_scanning에서 받은 문자열: ${intent.getStringExtra("userName")}")
+
+        AWSMobileClient.getInstance().initialize(applicationContext, object: com.amazonaws.mobile.client.Callback<UserStateDetails> {
+            override fun onResult(result: UserStateDetails?) {
+                if(result?.userState == UserState.SIGNED_IN) {
+                    userEmail = AWSMobileClient.getInstance().userAttributes["email"].toString()
+                    userName = AWSMobileClient.getInstance().userAttributes["name"].toString()
+                    Log.i(TAG, "userEmail is / $userEmail")
+                    Log.i(TAG, "userName is / $userName")
+
+                    runOnUiThread {
+                        binding.userId.text = userEmail
+                        binding.userName.text = userName
+                    }
+                }
+            }
+
+            override fun onError(e: Exception?) {
+                Log.i(TAG, "AWSMobileClient Error / $e")
+            }
+        })
+
+        //userEmail = intent.getStringExtra("userEmail").toString()
+        //userName = intent.getStringExtra("userName").toString()
+
+        //이메일 텍스트 길이가 길 수 있으므로 흐르기 효과를 주기위해
+        binding.userId.isSelected = true
+
+        //binding.userName.text = userName
 
         binding.seatTxt.text = intent.getStringExtra("bluetooth_name")
         val deviceAddress = intent.getStringExtra("bluetooth_address")
@@ -39,7 +72,7 @@ class MainOption : AppCompatActivity() {
 
         //spinner에서 사용할 아이템 목록
         //해당 정보는 AWS에 반영이 되어야 함(사용목적의 변경을 위해서 필요)
-        var purpose_data = listOf("사용목적을 선택해 주세요.", "공부", "회의", "스터디")
+        var purpose_data = listOf("공부", "회의", "스터디")
         var adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, purpose_data)
         binding.purposeSpinner.adapter = adapter
 
@@ -47,7 +80,7 @@ class MainOption : AppCompatActivity() {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 binding.purposeTxt.text = purpose_data[position]
                 val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-                val result = updateRequest?.updateInfo(deviceAddress.toString(), "unknown", purpose_data[position], true)?.enqueue(object: Callback<ResponseBody> {
+                val result = updateRequest?.updateInfo(deviceAddress.toString(), userEmail, "unknown", purpose_data[position], true)?.enqueue(object: Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         Log.i(TAG, "응답 성공: ${response.raw()}")
                     }
