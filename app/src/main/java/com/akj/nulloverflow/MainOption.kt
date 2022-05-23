@@ -72,7 +72,7 @@ class MainOption : AppCompatActivity() {
 
         //spinner에서 사용할 아이템 목록
         //해당 정보는 AWS에 반영이 되어야 함(사용목적의 변경을 위해서 필요)
-        var purpose_data = listOf("공부", "회의", "스터디")
+        var purpose_data = listOf("Study", "DisCussion")
         var adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, purpose_data)
         binding.purposeSpinner.adapter = adapter
 
