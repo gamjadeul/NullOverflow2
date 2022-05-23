@@ -25,9 +25,10 @@ private val TAG = "GATTConnect"
 //bluetooth_scanning 부분에서 gattCallback 구현 및 다른 기능들을 구현할 수 있지만 다른 class 파일 만들어서 관리
 //bluetooth_scanning 에서 넘어오는 bluetoothGatt 값은 처음에는 null -> 계속해서 null 값임
 //bluetooth_scanning에서 호출되는 class 이므로 intent로 값을 받아오거나 할 수는 없음
-class BluetoothService(private val context: Context, private var bluetoothGatt: BluetoothGatt?, private val purpose: String) {
+class BluetoothService(private val context: Context, private var bluetoothGatt: BluetoothGatt?, private val purpose: String, private val userEmail: String) {
     //처음 생성자에 의해 생성될 때 device의 값은 null이며 이후 gatt라는 함수에서 할당됨
     private var device: BluetoothDevice? = null
+
     //GATT연결에 사용될 GATT callback함수
     private val gattCallback : BluetoothGattCallback = object : BluetoothGattCallback() {
 
@@ -69,8 +70,9 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
                     https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com/bti/bluetooth_update까지만 들어가고 뒤에 쿼리문은 안들어감
 
                      */
+                    //연결 됐을 때, 사용자 정보랑 시간 등 쿼리스트링으로 만들어서 보내줘야됨
                     val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-                    val result = updateRequest?.updateInfo(device?.address.toString(), "unknown", purpose, true)?.enqueue(object: Callback<ResponseBody> {
+                    val result = updateRequest?.updateInfo(device?.address.toString(), userEmail, "unknown", purpose, true)?.enqueue(object: Callback<ResponseBody> {
                         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                             Log.i(TAG, "응답 성공: ${response.raw()}")
                         }
@@ -166,8 +168,9 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
             bluetoothGatt = null
             if(bluetoothGatt == null) {
                 //연결이 해제됐을 때는 stat의 값을 false로 바꿔주고 purpose의 값 역시 ""로 바꿔줘야 될 듯
+                //disconnnect되었을 때, 역시 쿼리스트링 만들어서 보내줘야될 듯
                 val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
-                val result = updateRequest?.updateInfo(device?.address.toString(), "unknown","", false)?.enqueue(object: Callback<ResponseBody> {
+                val result = updateRequest?.updateInfo(device?.address.toString(), userEmail, "unknown","", false)?.enqueue(object: Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         Log.i(TAG, "응답 성공: ${response.raw()}")
                     }
