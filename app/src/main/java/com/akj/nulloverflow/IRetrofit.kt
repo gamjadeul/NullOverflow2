@@ -36,6 +36,7 @@ interface IRetrofit {
                    @Query("email") userEmail: String?,
                    @Query("location") fixedLocation: String,
                    @Query("purpose") updatePur: String,
-                   @Query("stat") updateStat: Boolean) : Call<ResponseBody>
+                   @Query("stat") updateStat: Boolean,
+                   @Query("timelog") usingTime: String) : Call<ResponseBody>
 
 }
