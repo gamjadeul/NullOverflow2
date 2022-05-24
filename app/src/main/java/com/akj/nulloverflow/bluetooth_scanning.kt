@@ -178,7 +178,7 @@ class bluetooth_scanning : AppCompatActivity() {
         reAdapter.setItemClickListener(object: ItemClickListener{
             override fun onClick(view: View, position: Int) {
                 //자리비움 postDelay취소
-                handler.removeCallbacksAndMessages(null)
+                //handler.removeCallbacksAndMessages(null)
 
                 //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
                 //deviceScan이 아닌 스캔 버튼이 눌린 것 같은 효과를 줘야될 듯
