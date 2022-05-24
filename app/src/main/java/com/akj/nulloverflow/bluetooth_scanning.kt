@@ -32,7 +32,13 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.UserStateDetails
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Response
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 private val TAG = "bluetooth_scanning"
 
@@ -42,6 +48,8 @@ private val TAG = "bluetooth_scanning"
 class bluetooth_scanning : AppCompatActivity() {
 
     val binding by lazy { ActivityBluetoothScanningBinding.inflate(layoutInflater) }
+
+    private val dataFormat = SimpleDateFormat("yyyy-MM-dd/hh:mm:ss", Locale.KOREA)
 
     //startActiviyForResult가 deprecated되었기 때문에 필요한 변수
     private lateinit var resultActivity: ActivityResultLauncher<Intent>
@@ -75,7 +83,7 @@ class bluetooth_scanning : AppCompatActivity() {
     //GATT서버에 연결하기위해 필요 -> null로 초기화 시켜주기 때문에 매번 destroy되고 null이 되는 문제 존재
     private var bleGatt: BluetoothGatt ?= null
     //연결된 디바이스의 이름을 저장할 때 사용할 변수
-    private lateinit var device:BluetoothDevice
+    private var device: BluetoothDevice ?= null
     //블루투스 기기를 scan할 때 불러주는 startScan 및 stopScan 메서드에서 인자로 넘겨주어야할 클래스(콜백)
     private val bleScanCallBack = object : ScanCallback() {
         //BLE의 advertisement가 발견되었을 때 호출됨(필터 없이 호출되는 경우, 필터가 있어도 호출되는 경우가 존재)
@@ -117,7 +125,7 @@ class bluetooth_scanning : AppCompatActivity() {
         //스캔을 중지했다가 다시 스캔하면 오류가 남, errorCode는 2
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
-            Toast.makeText(this@bluetooth_scanning, "검색에 실패했습니다. Error : ${errorCode}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@bluetooth_scanning, "검색에 실패했습니다. Error : $errorCode", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -169,6 +177,9 @@ class bluetooth_scanning : AppCompatActivity() {
         //아탑터에 interface로 선언한 ItemClickListener 등록시켜주고 onClick override
         reAdapter.setItemClickListener(object: ItemClickListener{
             override fun onClick(view: View, position: Int) {
+                //자리비움 postDelay취소
+                handler.removeCallbacksAndMessages(null)
+
                 //연결하고자 하는 기기를 클릭하면 즉시 scan을 중지한 후
                 //deviceScan이 아닌 스캔 버튼이 눌린 것 같은 효과를 줘야될 듯
                 binding.scanBtn.isChecked = false
@@ -181,12 +192,14 @@ class bluetooth_scanning : AppCompatActivity() {
                 //100밀리초 이후에 연결시도
                 //Thread.sleep(600)
 
+                /*
                 //for test
                 if(bleGatt == null){
                     Log.i(TAG, "before connection bluetooth Gatt Is Null")
                 } else {
                     Log.i(TAG, "before connection bluetooth Gatt Is Not Null: ${bleGatt.toString()}")
                 }
+                 */
 
                 //test
                 Log.i(TAG, "Empty_room Activity에서 전달된 문자열: " + intent.getStringExtra("purpose").toString())
@@ -241,6 +254,9 @@ class bluetooth_scanning : AppCompatActivity() {
         //연결해제 버튼 눌렀을 시
         binding.disconnBtn.setOnClickListener {
             bleGatt?.disconnect()
+            bleGatt = null
+            device = null
+            //Log.i(TAG, "연결해제, blueGatt의 값 / ${bleGatt.toString()}")
             binding.disconnBtn.visibility = View.INVISIBLE
         }
     }
@@ -262,9 +278,26 @@ class bluetooth_scanning : AppCompatActivity() {
                 return true
             }
             R.id.main_option -> {
+                //해당 부분에서 intent에 내가만든 Data Class넣어서 보내줘야 될 듯, 연결정보가 없으면 null일테고 있으면 null이 아닐테니 꺼내서 쓰면 됨
+                //bleGatt정보(연결되어 있다면 bleGatt연결정보가 담길 것임)
                 val intent = Intent(this, MainOption::class.java)
-                intent.putExtra("bluetooth_name", device.name)
-                intent.putExtra("bluetooth_address", device.address)
+
+                /*
+                //2022-05-25
+                val bluetooth = Bluetooth(bleGatt, device)
+                intent.putExtra("bluetooth", bluetooth)
+                //
+                 */
+
+                if(bleGatt == null){
+                    intent.putExtra("bluetooth_name", "없음")
+                    intent.putExtra("bluetooth_address", "")
+                }
+                else {
+                    intent.putExtra("bluetooth_name", device?.name)
+                    intent.putExtra("bluetooth_address", device?.address)
+                }
+
                 //intent.putExtra("userEmail", userEmail)
                 //intent.putExtra("userName", userName)
                 startActivity(intent)
@@ -276,6 +309,60 @@ class bluetooth_scanning : AppCompatActivity() {
                 val intent = Intent(this, RoomCheck::class.java)
                 startActivity(intent)
             }
+
+            /*
+            R.id.step_out -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("자리 비움")
+                    .setMessage("자리를 비울 수 있는 시간은 10분입니다.")
+                    .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, id ->
+                        //이부분에 서버에 10분 딜레이주는 코드 추가해야함
+                        //딜레이가 아닌 연결 끊고 서버에는 사용중임을 보내주면 됨, 그리고 특정 시간 후에 연결 시도해서 연결 안되면 서버에 연결 해제되는 걸로, 중간에 연결 되면 그냥 냅두면 될듯?
+                        if(bleGatt == null){
+                            Toast.makeText(this, "블루투스가 연결되어 있지 않습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            //10분후 DB에 연결 해제 쿼리 보냄
+                            handler.postDelayed({
+                                val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+                                val result = updateRequest?.updateInfo(device?.address.toString(), userEmail, "unknown", "",
+                                    false, dataFormat.format(System.currentTimeMillis()))
+                                    ?.enqueue(object: retrofit2.Callback<ResponseBody> {
+                                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                            Log.i(TAG, "응답 성공: ${response.raw()}")
+                                        }
+
+                                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                            Log.i(TAG, "응답 실패, Errored by: $t")
+                                        }
+                                    })
+                                bleGatt = null
+                                device = null
+                            }, 600000)
+                            bleGatt?.disconnect()
+                            Thread.sleep(100)
+                            Log.i(TAG, "호출순서: bluetooth_scanning")
+                            val updateRequest = RetrofitClient.getClient("https://gp34e91r3a.execute-api.ap-northeast-2.amazonaws.com")?.create(IRetrofit::class.java)
+                            val result = updateRequest?.updateInfo(device?.address.toString(), userEmail, "unknown", intent.getStringExtra("purpose").toString(),
+                                true, dataFormat.format(System.currentTimeMillis()))
+                                ?.enqueue(object: retrofit2.Callback<ResponseBody> {
+                                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                                        Log.i(TAG, "응답 성공: ${response.raw()}")
+                                    }
+
+                                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                        Log.i(TAG, "응답 실패, Errored by: $t")
+                                    }
+                                })
+                        }
+
+                    })
+                    .setNegativeButton("취소", DialogInterface.OnClickListener { dialogInterface, id ->
+
+                    })
+                builder.show()
+            }
+             */
         }
         return super.onOptionsItemSelected(item)
     }
@@ -405,7 +492,6 @@ class bluetooth_scanning : AppCompatActivity() {
     //API레벨이 21이상인 LOLLIPOP버전 이상만 사용 가능 -> startLeScan이 depercated 됨
     //state의 상태에 따라서 핸들러를 이용, BLE기기를 scan하도록
     //compilesdk가 32 즉, marshmallow보다 높은 버전임, 이렇게되면 권한 사용할때마다 check해줘야됨, 모든 권한을 check할 수 있는 check함수 만들어야될듯 -> targetSdk와 관련있는 거라서 이게 아닌듯
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun deviceScan(state: Boolean) {
         //BLUETOOTH_SCAN에 관한 permission 없을 때 요청해줘여야됨, 있으면 바로 및 if(state)문으로 진입
         //해당부분 역시 MinSdk가 21인데 반해 targetSdk가 30이상이라 추가된 코드 따라서 분기분이 필요할 수도?
