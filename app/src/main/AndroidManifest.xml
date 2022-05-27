@@ -26,10 +26,19 @@ If your app targets Android 9 or lower, you can declare
         android:supportsRtl="true"
         android:theme="@style/Theme.NullOverflow"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".FBMessaging"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".RoomCheck"
             android:exported="false"
-            android:theme="@style/AppTheme.RoomCheck"/>
+            android:theme="@style/AppTheme.RoomCheck" />
         <activity
             android:name=".SignupConfirm"
             android:exported="false" />
@@ -39,7 +48,11 @@ If your app targets Android 9 or lower, you can declare
             android:theme="@style/AppTheme.Scanning" />
         <activity
             android:name=".Occupied_room"
-            android:exported="false" />
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Empty_room"
             android:exported="false" />
