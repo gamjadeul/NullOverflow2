@@ -24,6 +24,7 @@ If your app targets Android 9 or lower, you can declare
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".Noti"
         android:theme="@style/Theme.NullOverflow"
         android:usesCleartextTraffic="true">
         <service
