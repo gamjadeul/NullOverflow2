@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class Empty_room extends AppCompatActivity {
 
@@ -18,6 +19,17 @@ public class Empty_room extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_room);
+
+        try {
+            Intent intent = getIntent();
+            String room_loc = intent.getStringExtra("room_location");
+            TextView room_location = findViewById(R.id.room_info_empty);
+            room_location.setText(room_loc);
+        } catch (Exception e) {
+            TextView room_location = findViewById(R.id.room_info_empty);
+            room_location.setText("정보를 받아올 수 없습니다.");
+        }
+
 
         String[] empty_purpose = {"스터디", "회의"};
 

@@ -9,12 +9,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.data.DataBufferObserver;
@@ -40,6 +42,23 @@ public class Occupied_room extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_occupied_room);
+
+        try {
+            Intent intent = getIntent();
+            String room_loc = intent.getStringExtra("room_location");
+            String room_pur = intent.getStringExtra("room_purpose");
+
+            TextView room_location = findViewById(R.id.room_info_occupied);
+            room_location.setText(room_loc);
+            TextView room_purpose = findViewById(R.id.pupose_occupied);
+            room_purpose.setText(room_pur);
+        }catch (Exception e) {
+            TextView room_location = findViewById(R.id.room_info_occupied);
+            room_location.setText("정보를 받아올 수 없습니다. ");
+            TextView room_purpose = findViewById(R.id.pupose_occupied);
+            room_purpose.setText("정보를 받아올 수 없습니다. ");
+        }
+
 
         Button btnAlam = findViewById(R.id.button2);
         btnAlam.setOnClickListener(new View.OnClickListener() {
