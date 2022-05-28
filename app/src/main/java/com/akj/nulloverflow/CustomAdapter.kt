@@ -2,6 +2,7 @@ package com.akj.nulloverflow
 
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,10 +42,10 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
         }
         holder.itemView.setOnClickListener {
             val emptyRoomIntent = Intent(holder.itemView.context, Empty_room::class.java)
-            emptyRoomIntent.putExtra("room_location", listData[position].floor)
+            emptyRoomIntent.putExtra("room_location", listData[position].floor.toString() + "층 " + listData[position].point)
 
             val occupiedRoomIntent = Intent(holder.itemView.context, Occupied_room::class.java)
-            occupiedRoomIntent.putExtra("room_location", listData[position].floor)
+            occupiedRoomIntent.putExtra("room_location", listData[position].floor.toString() + "층 " + listData[position].point)
             occupiedRoomIntent.putExtra("room_purpose", listData[position].pur)
 
             //현재 사용중인 자리일 경우
