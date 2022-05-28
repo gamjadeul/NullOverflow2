@@ -47,9 +47,9 @@ public class FBMessaging extends FirebaseMessagingService {
 
             notificationManager.notify(0, notificationBuilder.build());
         }
-        catch (NullPointerException nullException) {
+        catch (Exception e) {
             Toast.makeText(getApplicationContext(), "알림에 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
-            Log.e("error Notify", nullException.toString());
+            Log.e("error Notify", e.toString());
         }
 
     }
