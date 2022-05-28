@@ -49,9 +49,6 @@ If your app targets Android 9 or lower, you can declare
         <activity
             android:name=".Occupied_room"
             android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Empty_room"

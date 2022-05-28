@@ -25,7 +25,7 @@ public class Send_email extends AppCompatActivity {
         //원래 코드 -> setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_send_email);
 
-        String[] Q_type = {"Question type not chosen", "Lost & Found", "Complaint"};
+        String[] Q_type = {"문의 종류를 선택하세요", "분실물 문의", "신고하기"};
 
         Spinner spinner1 = findViewById(R.id.spinner);
 

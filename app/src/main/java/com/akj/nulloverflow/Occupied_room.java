@@ -2,6 +2,8 @@ package com.akj.nulloverflow;
 
 import static android.content.ContentValues.TAG;
 
+import static com.amazonaws.http.HttpHeader.USER_AGENT;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,13 +17,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -66,8 +72,8 @@ public class Occupied_room extends AppCompatActivity {
                                         String token = task.getResult();
                                         // Connect to aws api gateway
                                         Log.d("token", token);
-                                        String new_url = url+"?token=" +token;
-                                        //getJSON(new_url, "POST");
+                                        String new_url = url+"?token=qqq" +token + "&stat=true";
+                                        httpConn(new_url, "POST");
                                         Toast.makeText(Occupied_room.this, "Push notifications will be sent to you", Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -83,28 +89,8 @@ public class Occupied_room extends AppCompatActivity {
         AlertDialog msgDlg = msgBuilder.create();
         msgDlg.show();
     }
-/*
-    private final MyHandler mHandler = new MyHandler(this);
-    private static class MyHandler extends Handler {
-        private final WeakReference<MainActivity> weakReference;
 
-        public MyHandler(MainActivity mainactivity) {
-            weakReference = new WeakReference<MainActivity>(mainactivity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) { //return 메시지 텍스트뷰로 보여주는 함수
-
-            MainActivity mainactivity = weakReference.get();
-            if (mainactivity != null) {
-                switch (msg.what) { //여기서부터 다른 코드 작성 가능
-                    case LOAD_SUCCESS:
-                        break;
-                }
-            }
-        }
-    }
-    public void  getJSON(final String mUrl, final String connMethod) {
+    public void  httpConn(final String mUrl, final String connMethod) {
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 String result;
@@ -152,10 +138,8 @@ public class Occupied_room extends AppCompatActivity {
                     result = e.toString();
                 }
                 Log.i(TAG, "error in message handler");
-                Message message = mHandler.obtainMessage(LOAD_SUCCESS, result); //리턴값 중에 용도만 뽑아서 보냄
-                mHandler.sendMessage(message); //여기를 수정하기보다 message handler 함수를 수정하기
             }
         });
         thread.start();
-    }*/
+    }
 }
