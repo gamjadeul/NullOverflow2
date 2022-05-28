@@ -19,7 +19,7 @@ public class Empty_room extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_room);
 
-        String[] empty_purpose = {"Study", "Discussion"};
+        String[] empty_purpose = {"스터디", "회의"};
 
         final String[] selected_purpose = {""};
         Spinner spinner = findViewById(R.id.purpose);

@@ -12,7 +12,7 @@
         android:layout_height="50dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="Start Using by Connecting Bluetooth"
+        android:text="블루투스 연결하기"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -40,7 +40,7 @@
         android:paddingTop="5dp"
         android:paddingRight="5dp"
         android:paddingBottom="5dp"
-        android:text="This room is"
+        android:text="테라스 위치:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
