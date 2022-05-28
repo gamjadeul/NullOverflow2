@@ -38,14 +38,10 @@ class MainOption : AppCompatActivity() {
     private var userEmail: String? = null
     private var userName: String? = null
     private val dataFormat = SimpleDateFormat("yyyy-MM-dd/hh:mm:ss", Locale.KOREA)
-    //private lateinit var bluetooth: Bluetooth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        //Log.i(TAG, "bluetooth_scanning에서 받은 문자열: ${intent.getStringExtra("userEmail")}")
-        //Log.i(TAG, "bluetooth_scanning에서 받은 문자열: ${intent.getStringExtra("userName")}")
 
         AWSMobileClient.getInstance().initialize(applicationContext, object: com.amazonaws.mobile.client.Callback<UserStateDetails> {
             override fun onResult(result: UserStateDetails?) {
@@ -67,24 +63,8 @@ class MainOption : AppCompatActivity() {
             }
         })
 
-        //userEmail = intent.getStringExtra("userEmail").toString()
-        //userName = intent.getStringExtra("userName").toString()
-
         //이메일 텍스트 길이가 길 수 있으므로 흐르기 효과를 주기위해
         binding.userId.isSelected = true
-
-        /*
-        //2022-05-25
-        bluetooth = intent.getSerializableExtra("bluetooth") as Bluetooth
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), bluetooth_scanning.BLUETOOTH_SCAN_PERMISSION)
-        }
-        Log.i(TAG, "전달받은 bluetooth Serializable객체 / $bluetooth")
-        Log.i(TAG, "전달받은 객체의 값(device.name) / ${bluetooth.bluetoothDevice.name}")
-        Log.i(TAG, "전달받은 객체의 값(device.address) / ${bluetooth.bluetoothDevice.address}")
-        Log.i(TAG, "전달받은 객체의 값(BluetoothGatt) / ${bluetooth.bleGattInfo.toString()}")
-        //
-        */
 
         //binding.userName.text = userName
         binding.seatTxt.text = intent.getStringExtra("bluetooth_name")
@@ -93,7 +73,7 @@ class MainOption : AppCompatActivity() {
 
         //spinner에서 사용할 아이템 목록
         //해당 정보는 AWS에 반영이 되어야 함(사용목적의 변경을 위해서 필요)
-        var purpose_data = listOf("Study", "Discussion")
+        var purpose_data = listOf("공부", "회의")
         var adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, purpose_data)
         binding.purposeSpinner.adapter = adapter
 

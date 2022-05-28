@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -52,19 +53,27 @@ public class Send_email extends AppCompatActivity {
             public void onClick(View view) {
 
                 Spinner mail_title = findViewById(R.id.spinner);
+                //Log.i("email", "스피너 객체의 텍스트" + mail_title.getSelectedItem().toString());
                 EditText used_time = findViewById(R.id.editTextTime);
+                //Log.i("email", "textTime 객체의 텍스트" + used_time.getText().toString());
                 EditText used_date = findViewById(R.id.used_date);
+                //Log.i("email", "used_date 객체의 텍스트" + used_date.getText().toString());
                 EditText content = findViewById(R.id.editTextTextMultiLine);
+                //Log.i("email", "문의사항 객체의 텍스트" + content.getText().toString());
 
                 Intent mail_intent = new Intent(Intent.ACTION_SEND);
                 mail_intent.setType("*/*");
 
-                mail_intent.putExtra(Intent.EXTRA_EMAIL, "gamjadeul0217@gmail.com"); //받는사람 설정
+                mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gamjadeul0217@gmail.com"}); //받는사람 설정
                 mail_intent.putExtra(Intent.EXTRA_SUBJECT, mail_title.getSelectedItem().toString()); //메일 제목 스피너에서 뽑아서 설정
 
+                /*
                 //메일 내용: 사용날짜, 사용시간, 문의사항
                 String[] mail_content = {used_date.getText().toString(), used_time.getText().toString(), content.getText().toString()};
                 mail_intent.putExtra(Intent.EXTRA_TEXT, mail_content);
+
+                 */
+                mail_intent.putExtra(Intent.EXTRA_TEXT, content.getText().toString());
 
                 startActivity(mail_intent);
             }

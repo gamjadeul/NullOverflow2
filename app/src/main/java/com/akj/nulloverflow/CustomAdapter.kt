@@ -41,7 +41,12 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
         }
         holder.itemView.setOnClickListener {
             val emptyRoomIntent = Intent(holder.itemView.context, Empty_room::class.java)
+            emptyRoomIntent.putExtra("room_location", listData[position].floor)
+
             val occupiedRoomIntent = Intent(holder.itemView.context, Occupied_room::class.java)
+            occupiedRoomIntent.putExtra("room_location", listData[position].floor)
+            occupiedRoomIntent.putExtra("room_purpose", listData[position].pur)
+
             //현재 사용중인 자리일 경우
             if(listData[position].uses){
                 ContextCompat.startActivity(holder.itemView.context, occupiedRoomIntent, null)
