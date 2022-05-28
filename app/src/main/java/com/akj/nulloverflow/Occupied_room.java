@@ -91,7 +91,7 @@ public class Occupied_room extends AppCompatActivity {
                                         String token = task.getResult();
                                         // Connect to aws api gateway
                                         Log.d("token", token);
-                                        String new_url = url+"?token=qqq" +token + "&stat=true";
+                                        String new_url = url+"?token=" +token + "&stat=true";
                                         httpConn(new_url, "POST");
                                         Toast.makeText(Occupied_room.this, "Push notifications will be sent to you", Toast.LENGTH_SHORT).show();
                                     }
