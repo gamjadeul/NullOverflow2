@@ -52,7 +52,7 @@ public class FBMessaging extends FirebaseMessagingService {
             notificationManager = NotificationManagerCompat.from(this);
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, SEAT_CHANNEL)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
                     //.setContentTitle(title)
                     .setContentText(body)
                     .setAutoCancel(true)

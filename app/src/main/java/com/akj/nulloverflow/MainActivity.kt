@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var re_adapter: CustomAdapter
     lateinit var info: MutableList<Info>
     lateinit var userAttr: MutableMap<String, String>
+    private var timeRenew = mutableMapOf<String, Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onFailure(call: Call<BleTableData>, t: Throwable) {
-                Log.i("mainActivityTest", "호출 실패 onFailure / t : $t")
             }
         })
 
@@ -64,10 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
            startActivity(intent)
            overridePendingTransition(0, 0)
         }
-        //Log.i("mainActivityTest", "찾아보기${testList?.body?.find { "mac" == "7C:EC:79:FE:ED:71" }}")
 
-
-        //Log.i("mainActivityTest", "AWSMobileClient.getInstance() / ${AWSMobileClient.getInstance().toString()}")
         AWSMobileClient.getInstance().initialize(applicationContext, object: Callback<UserStateDetails> {
             override fun onResult(result: UserStateDetails?) {
                 //로그인이 되어있는 상태라면
@@ -107,6 +104,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lateinit var where: String
         lateinit var mac: String
         lateinit var pur: String
+        var time: Long?
 
         for (no in 1..15) {
             when(no) {
@@ -117,18 +115,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mac = "7C:EC:79:FE:ED:71"
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
                         mac = "4C:24:98:78:1C:7B"
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else {
                         where = "연구실 옆 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                 }
                 in 4..6 -> {
@@ -138,18 +139,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else {
                         where = "연구실 옆 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                 }
                 in 7..9 -> {
@@ -159,18 +163,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else {
                         where = "연구실 옆 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                 }
                 in 10..12 -> {
@@ -180,18 +187,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else {
                         where = "연구실 옆 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                 }
                 else -> {
@@ -201,22 +211,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else if (no % 3 == 2) {
                         where = "중앙 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                     else {
                         where = "연구실 옆 테라스"
                         mac = ""
                         stat = macFinder(mac)
                         pur = purFinder(mac)
+                        time = exTime(mac)
                     }
                 }
             }
-            val cur_info = Info(floor, where, mac, stat, pur)
+            val cur_info = Info(floor, where, mac, stat, pur, time)
             info.add(cur_info)
         }
         return info
@@ -224,9 +237,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //body에서 정보 추출해서 각자 map에 저장함
     private fun extractInfo(sourceInfo: BleTableData) {
-        Log.i("mainActivityTest", "sourceInfo.body의 값: ${sourceInfo.body}")
         for(susInfo in sourceInfo.body){
             testMap[susInfo.mac] = susInfo.stat
+            timeRenew[susInfo.mac] = susInfo.expireTimeMil.toLong()
             purposeMap[susInfo.mac] = susInfo.purpose
         }
         info = loadData()
@@ -234,6 +247,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         re_adapter.listData = info
         binding.seatRecycler.adapter = re_adapter
         binding.seatRecycler.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun exTime(macAdd: String): Long {
+        return timeRenew[macAdd]?:0
     }
 
     //자리의 사용여부를 리턴

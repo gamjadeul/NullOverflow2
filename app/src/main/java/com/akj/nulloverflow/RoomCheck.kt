@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.akj.nulloverflow.databinding.ActivityMainBinding
 import com.akj.nulloverflow.databinding.ActivityRoomCheckBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 
 class RoomCheck : AppCompatActivity() {
     val binding by lazy { ActivityRoomCheckBinding.inflate(layoutInflater) }

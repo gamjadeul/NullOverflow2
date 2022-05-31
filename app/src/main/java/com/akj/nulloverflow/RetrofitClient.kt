@@ -11,6 +11,7 @@ object RetrofitClient {
 
     fun getClient(baseUrl: String): Retrofit? {
 
+        /*
         val logClient = OkHttpClient.Builder()
 
         //로깅 인터셉터
@@ -23,12 +24,12 @@ object RetrofitClient {
         //로깅인터셉터 등록
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
         logClient.addInterceptor(loggingInterceptor)
-
+         */
         if(retrofit == null) {
             retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(logClient.build())  //해당 레트로핏에 로깅인터셉터 단 OkHttpClient붙여줌
+                //.client(logClient.build())  //해당 레트로핏에 로깅인터셉터 단 OkHttpClient붙여줌
                 .build()
         }
 
