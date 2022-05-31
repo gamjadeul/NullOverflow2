@@ -63,7 +63,7 @@ public class FBMessaging extends FirebaseMessagingService {
 
             notificationManager.notify(0, notificationBuilder.build());
         }
-        catch (Exception e) {
+        catch (NullPointerException e) {
             hander.postDelayed(new Runnable() {
                 @Override
                 public void run() {

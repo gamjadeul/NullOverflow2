@@ -43,9 +43,10 @@ public class Occupied_room extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_occupied_room);
 
+        String room_loc = "";
         try {
             Intent intent = getIntent();
-            String room_loc = intent.getStringExtra("room_location");
+            room_loc = intent.getStringExtra("room_location");
             String room_pur = intent.getStringExtra("room_purpose");
 
             TextView room_location = findViewById(R.id.room_info_occupied);
@@ -61,21 +62,22 @@ public class Occupied_room extends AppCompatActivity {
 
 
         Button btnAlam = findViewById(R.id.button2);
+        String finalRoom_loc = room_loc;
         btnAlam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
+                showDialog(finalRoom_loc);
             }
         });
     }
 
-    void showDialog() { //푸시알림 팝업창
+    void showDialog(String room_loc) { //푸시알림 팝업창
         AlertDialog.Builder msgBuilder = new AlertDialog.Builder(Occupied_room.this)
-                .setTitle("Do you want to be noticed?")
+                .setTitle("푸시알림을 받으시겠습니까?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //푸시 알림 받겠다 클릭하면 파이어베이스 주제에 구독하게 됨
+                        //푸시 알림 받겠다 클릭하면 DynamoDB에 토큰, 테라스 이름정보 들어감
 
                         String url = "https://ptvxg97ama.execute-api.ap-northeast-2.amazonaws.com/pli/user_device_for_pushNotification";
 
@@ -91,9 +93,9 @@ public class Occupied_room extends AppCompatActivity {
                                         String token = task.getResult();
                                         // Connect to aws api gateway
                                         Log.d("token", token);
-                                        String new_url = url+"?token=" +token + "&stat=true";
+                                        String new_url = url+"?token=" + token + "&stat=true" + "&loc=" + room_loc;
                                         httpConn(new_url, "POST");
-                                        Toast.makeText(Occupied_room.this, "Push notifications will be sent to you", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Occupied_room.this, "푸시알림을 보내드립니다. ", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -102,13 +104,13 @@ public class Occupied_room extends AppCompatActivity {
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        finish(); //여기에 알림 안보내는 코드 작성
+                        //finish(); //여기에 알림 안보내는 코드 작성
                     }
                 });
         AlertDialog msgDlg = msgBuilder.create();
         msgDlg.show();
     }
-
+    //서버연결해서 token, 테라스정보 올리기
     public void  httpConn(final String mUrl, final String connMethod) {
         Thread thread = new Thread(new Runnable() {
             public void run() {
@@ -116,7 +118,6 @@ public class Occupied_room extends AppCompatActivity {
                 try {
                     URL url = new URL(mUrl);
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    Log.i(TAG, "error in httpURLConnection");
                     httpURLConnection.setReadTimeout(3000);
                     httpURLConnection.setConnectTimeout(3000);
                     httpURLConnection.setDoInput(true);
@@ -128,8 +129,6 @@ public class Occupied_room extends AppCompatActivity {
 
                     int responseStatusCode = httpURLConnection.getResponseCode();
 
-                    Log.i(TAG, "error in responseStatusCode");
-
                     //버퍼 열어서 서버에서 리턴값 받아오기
                     InputStream inputStream;
                     if (responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -137,14 +136,12 @@ public class Occupied_room extends AppCompatActivity {
                     } else {
                         inputStream = httpURLConnection.getErrorStream();
                     }
-                    Log.i(TAG, "error in inputStream");
 
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                     StringBuilder sb = new StringBuilder();
                     String line;
 
-                    Log.i(TAG, "error in bufferreader");
                     while ((line = bufferedReader.readLine()) != null) {
                         sb.append(line);
                     }
@@ -152,11 +149,10 @@ public class Occupied_room extends AppCompatActivity {
                     bufferedReader.close();
                     httpURLConnection.disconnect();
                     result = sb.toString().trim();
-                    Log.i(TAG, "error in disconnection");
+
                 } catch (Exception e) {
                     result = e.toString();
                 }
-                Log.i(TAG, "error in message handler");
             }
         });
         thread.start();
