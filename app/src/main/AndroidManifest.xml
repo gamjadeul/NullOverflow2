@@ -49,13 +49,16 @@ If your app targets Android 9 or lower, you can declare
             android:theme="@style/AppTheme.Scanning" />
         <activity
             android:name=".Occupied_room"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.OccupiedRoom"/>
         <activity
             android:name=".Empty_room"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.EmptyRoom"/>
         <activity
             android:name=".Send_email"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.EmailSend"/>
         <activity
             android:name=".MainOption"
             android:exported="false"
@@ -67,10 +70,12 @@ If your app targets Android 9 or lower, you can declare
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".Signup"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.SignUp"/>
         <activity
             android:name=".Signin"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/AppTheme.SignIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

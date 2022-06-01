@@ -1,5 +1,6 @@
 package com.akj.nulloverflow
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -29,6 +30,13 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
             holder.fText.setTextColor(Color.BLACK)
             holder.th.setTextColor(Color.BLACK)
             holder.loc.setTextColor(Color.BLACK)
+        }
+        else {
+            holder.card.setCardBackgroundColor(Color.WHITE)
+            holder.card.setCardBackgroundColor(Color.WHITE)
+            holder.fText.setTextColor(Color.GRAY)
+            holder.th.setTextColor(Color.GRAY)
+            holder.loc.setTextColor(Color.GRAY)
         }
 
         holder.itemView.setOnClickListener {

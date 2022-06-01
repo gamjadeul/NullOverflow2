@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,10 @@ public class Signup extends AppCompatActivity {
         signup_name = findViewById(R.id.signup_name);
         signup_department = findViewById(R.id.signup_department);
 
+        setSupportActionBar(findViewById(R.id.signUpToolBar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("회원가입");
 
 
         signup_btn1 = findViewById(R.id.signup_button1);
@@ -138,4 +143,14 @@ public class Signup extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

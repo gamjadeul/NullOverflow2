@@ -3,11 +3,13 @@ package com.akj.nulloverflow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityMainBinding
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
@@ -27,6 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var info: MutableList<Info>
     lateinit var userAttr: MutableMap<String, String>
     private var timeRenew = mutableMapOf<String, Long>()
+    lateinit var recyclerViewState: Parcelable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,122 +113,132 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             when(no) {
                 in 1..3 -> {
                     floor = 2
-                    if (no % 3 == 1) {
-                        where = "계단쪽 테라스"
-                        mac = "7C:EC:79:FE:ED:71"
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else if (no % 3 == 2) {
-                        where = "중앙 테라스"
-                        mac = "4C:24:98:78:1C:7B"
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else {
-                        where = "연구실 옆 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
+                    when {
+                        no % 3 == 1 -> {
+                            where = "계단쪽 테라스"
+                            mac = "7C:EC:79:FE:ED:71"
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        no % 3 == 2 -> {
+                            where = "중앙 테라스"
+                            mac = "4C:24:98:78:1C:7B"
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        else -> {
+                            where = "연구실 옆 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
                     }
                 }
                 in 4..6 -> {
                     floor = 3
-                    if (no % 3 == 1) {
-                        where = "계단쪽 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else if (no % 3 == 2) {
-                        where = "중앙 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else {
-                        where = "연구실 옆 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
+                    when {
+                        no % 3 == 1 -> {
+                            where = "계단쪽 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        no % 3 == 2 -> {
+                            where = "중앙 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        else -> {
+                            where = "연구실 옆 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
                     }
                 }
                 in 7..9 -> {
                     floor = 4
-                    if (no % 3 == 1) {
-                        where = "계단쪽 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else if (no % 3 == 2) {
-                        where = "중앙 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else {
-                        where = "연구실 옆 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
+                    when {
+                        no % 3 == 1 -> {
+                            where = "계단쪽 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        no % 3 == 2 -> {
+                            where = "중앙 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        else -> {
+                            where = "연구실 옆 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
                     }
                 }
                 in 10..12 -> {
                     floor = 5
-                    if (no % 3 == 1) {
-                        where = "계단쪽 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else if (no % 3 == 2) {
-                        where = "중앙 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else {
-                        where = "연구실 옆 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
+                    when {
+                        no % 3 == 1 -> {
+                            where = "계단쪽 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        no % 3 == 2 -> {
+                            where = "중앙 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        else -> {
+                            where = "연구실 옆 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
                     }
                 }
                 else -> {
                     floor = 6
-                    if (no % 3 == 1) {
-                        where = "계단쪽 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else if (no % 3 == 2) {
-                        where = "중앙 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
-                    }
-                    else {
-                        where = "연구실 옆 테라스"
-                        mac = ""
-                        stat = macFinder(mac)
-                        pur = purFinder(mac)
-                        time = exTime(mac)
+                    when {
+                        no % 3 == 1 -> {
+                            where = "계단쪽 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        no % 3 == 2 -> {
+                            where = "중앙 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
+                        else -> {
+                            where = "연구실 옆 테라스"
+                            mac = ""
+                            stat = macFinder(mac)
+                            pur = purFinder(mac)
+                            time = exTime(mac)
+                        }
                     }
                 }
             }
@@ -244,6 +257,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         info = loadData()
         re_adapter = CustomAdapter()
+        re_adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
         re_adapter.listData = info
         binding.seatRecycler.adapter = re_adapter
         binding.seatRecycler.layoutManager = LinearLayoutManager(this)

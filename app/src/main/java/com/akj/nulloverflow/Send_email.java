@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,11 @@ public class Send_email extends AppCompatActivity {
          */
         //원래 코드 -> setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_send_email);
+
+        setSupportActionBar(findViewById(R.id.sendEmailToolBar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("문의하기");
 
         String[] Q_type = {"문의 종류를 선택하세요", "분실물 문의", "신고하기"};
 
@@ -59,14 +65,16 @@ public class Send_email extends AppCompatActivity {
                 EditText used_date = findViewById(R.id.used_date);
                 //Log.i("email", "used_date 객체의 텍스트" + used_date.getText().toString());
                 EditText content = findViewById(R.id.editTextTextMultiLine);
+
+                EditText userEmail = findViewById(R.id.editTextTextPersonName);
                 //Log.i("email", "문의사항 객체의 텍스트" + content.getText().toString());
 
                 Intent mail_intent = new Intent(Intent.ACTION_SEND);
                 mail_intent.setType("*/*");
 
                 mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gamjadeul0217@gmail.com"}); //받는사람 설정
-                mail_intent.putExtra(Intent.EXTRA_SUBJECT, mail_title.getSelectedItem().toString()); //메일 제목 스피너에서 뽑아서 설정
-
+                mail_intent.putExtra(Intent.EXTRA_SUBJECT, userEmail.getText().toString() + " - "  + mail_title.getSelectedItem().toString()); //메일 제목 스피너에서 뽑아서 설정
+                //mail_intent.putExtra(Intent.EXTRA_TEXT, userEmail.getText().toString());
                 /*
                 //메일 내용: 사용날짜, 사용시간, 문의사항
                 String[] mail_content = {used_date.getText().toString(), used_time.getText().toString(), content.getText().toString()};
@@ -80,4 +88,14 @@ public class Send_email extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

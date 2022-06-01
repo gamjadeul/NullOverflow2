@@ -10,31 +10,43 @@
     tools:context=".MainActivity"
     tools:visibility="visible">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/sendEmailToolBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="370dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/edge"
         android:contentDescription="@string/app_name"
         android:dropDownWidth="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible"/>
+        app:layout_constraintTop_toBottomOf="@+id/sendEmailToolBar"
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
-        android:layout_width="370dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/edge"
         android:elegantTextHeight="false"
         android:ems="10"
-        android:hint="나의 이메일"
+        android:hint="사용자 이메일"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:labelFor="@id/editTextTextPersonName"
@@ -54,14 +66,14 @@
 
     <EditText
         android:id="@+id/editTextTime"
-        android:layout_width="180dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/edge"
         android:ems="10"
-        android:hint="사용 시간"
+        android:hint="사용시간(예. 오후 10시경 -> 2200, 오전9시 30분경 -> 0930)"
         android:importantForAutofill="no"
         android:inputType="time"
         android:minHeight="48dp"
@@ -71,17 +83,17 @@
         android:textSize="14sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.979"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/used_date" />
 
     <EditText
         android:id="@+id/editTextTextMultiLine"
-        android:layout_width="370dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/edge"
         android:ems="10"
         android:gravity="start|top"
@@ -95,6 +107,7 @@
         android:textColorHint="#757575"
         android:textSize="14sp"
         android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
@@ -125,13 +138,14 @@
 
     <EditText
         android:id="@+id/used_date"
-        android:layout_width="180dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/edge"
         android:ems="10"
-        android:hint="사용 날짜"
+        android:hint="사용일(YYYYMMDD)"
         android:importantForAutofill="no"
         android:inputType="date"
         android:paddingLeft="5dp"
@@ -139,8 +153,7 @@
         android:textColorHint="#757575"
         android:textSize="14sp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTime"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
 

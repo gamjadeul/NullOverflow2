@@ -17,13 +17,11 @@
         <entry key="..\:/AndroidStudioProjects/NullOverflow/app/src/main/res/menu/main_navigation.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow/app/src/main/res/menu/main_option_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow/app/src/main/res/menu/main_toolbar.xml" value="0.36614583333333334" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1955" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/edge.xml" value="0.1955" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/ic_baseline_exit_to_app_24.xml" value="0.226" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.226" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.226" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.226" />
-        <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1955" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_bluetooth_scanning.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_empty_room.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
@@ -40,9 +38,17 @@
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/seat_recylcer.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/menu/main_navigation.xml" value="0.3605128205128205" />
         <entry key="..\:/AndroidStudioProjects/NullOverflow2/app/src/main/res/menu/scanning_menu.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/drawable/header_background.xml" value="0.234" />
         <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_empty_room.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_occupied_room.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_send_email.xml" value="0.24909420289855072" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_signin.xml" value="0.24909420289855072" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_signup.xml" value="0.24909420289855072" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/drawer.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/header.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/room_check.xml" value="0.24909420289855072" />
+        <entry key="..\:/Users/chlwhdtjs98/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/seat_recylcer.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/gyte1/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_main.xml" value="0.17603850050658562" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_bluetooth_scanning.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/yubin/AndroidStudioProjects/NullOverflow2/app/src/main/res/layout/activity_empty_room.xml" value="0.264" />

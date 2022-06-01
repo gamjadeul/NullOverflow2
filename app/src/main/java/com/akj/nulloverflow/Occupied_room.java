@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +44,11 @@ public class Occupied_room extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_occupied_room);
 
+        setSupportActionBar(findViewById(R.id.occuToolBar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("사용 불가능 테라스");
+
         String room_loc = "";
         try {
             Intent intent = getIntent();
@@ -69,6 +75,15 @@ public class Occupied_room extends AppCompatActivity {
                 showDialog(finalRoom_loc);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void showDialog(String room_loc) { //푸시알림 팝업창
