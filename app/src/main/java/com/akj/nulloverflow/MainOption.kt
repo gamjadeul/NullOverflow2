@@ -3,7 +3,6 @@ package com.akj.nulloverflow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -19,8 +18,6 @@ import retrofit2.Response
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-
-private const val TAG = "MainOptionTAG"
 
 class MainOption : AppCompatActivity() {
 

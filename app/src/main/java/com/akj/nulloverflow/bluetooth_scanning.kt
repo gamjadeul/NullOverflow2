@@ -86,10 +86,9 @@ class bluetooth_scanning : AppCompatActivity() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
 
-            //Log.i(TAG, "onScanResult 콜백됨")
+
             result?.let {
                 if(!deviceList.contains(result.device)){
-                    //Log.i(TAG, "디바이스 리스트가 contain")
                     deviceList.add(result.device)
                     //리사이클러 뷰에 변화된거 띄워주는 코드 작성
                     reAdapter.notifyDataSetChanged()
@@ -100,10 +99,6 @@ class bluetooth_scanning : AppCompatActivity() {
         @SuppressLint("NotifyDataSetChanged")
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
-
-            //Log.i(TAG, "onBatchScanResults 콜백됨")
-            //결과로 받은 result가 null이 아닐때
-            //results의 타입 = ScanResult for Bluetooth LE scan. BluetoothDevice타입과는 다르므로 results에서 해당하는 타입을 추출해야함
             results?.let {
                 for(result in it) {
                     //기존 deviceList에 없을 경우 추가
@@ -216,7 +211,7 @@ class bluetooth_scanning : AppCompatActivity() {
             bleGatt?.disconnect()
             bleGatt = null
             device = null
-            //Log.i(TAG, "연결해제, blueGatt의 값 / ${bleGatt.toString()}")
+
             binding.disconnBtn.visibility = View.INVISIBLE
         }
     }

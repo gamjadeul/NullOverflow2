@@ -1,6 +1,5 @@
 package com.akj.nulloverflow
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater

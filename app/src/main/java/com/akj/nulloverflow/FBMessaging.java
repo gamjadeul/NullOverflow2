@@ -1,10 +1,6 @@
 package com.akj.nulloverflow;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -19,7 +15,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import static com.akj.nulloverflow.Noti.CAMERA_SERVICE;
 import static com.akj.nulloverflow.Noti.SEAT_CHANNEL;
 
 public class FBMessaging extends FirebaseMessagingService {
@@ -30,9 +25,6 @@ public class FBMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         showNotification(remoteMessage.getData().get("message"));
-        Log.i("test", remoteMessage.getData().get("message"));
-        //Toast.makeText(FBMessaging.this, "messagereceived", Toast.LENGTH_SHORT).show();
-        //Log.d("dd", "messagereceived");
     }
 
     private void showNotification(String body) {
@@ -53,13 +45,10 @@ public class FBMessaging extends FirebaseMessagingService {
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, SEAT_CHANNEL)
                     .setSmallIcon(R.mipmap.ic_launcher_round)
-                    //.setContentTitle(title)
                     .setContentText(body)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
-
-            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             notificationManager.notify(0, notificationBuilder.build());
         }

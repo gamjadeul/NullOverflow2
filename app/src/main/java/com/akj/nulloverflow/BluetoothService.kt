@@ -131,7 +131,6 @@ class BluetoothService(private val context: Context, private var bluetoothGatt: 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             bluetoothGatt = device?.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
         } else {
-            //Log.i(TAG, "BluetoothService.gatt is called (lower than VERSION_CODE M(sdk23))")
             bluetoothGatt = device?.connectGatt(context,false, gattCallback)
         }
         return bluetoothGatt

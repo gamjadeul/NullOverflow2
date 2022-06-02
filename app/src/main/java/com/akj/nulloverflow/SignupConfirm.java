@@ -44,7 +44,6 @@ public class SignupConfirm extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d(TAG, "Sign-up callback state: " + signUpResult.getConfirmationState());
                                 if(!signUpResult.getConfirmationState()){
                                     final UserCodeDeliveryDetails details = signUpResult.getUserCodeDeliveryDetails();
 

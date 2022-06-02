@@ -3,13 +3,11 @@ package com.akj.nulloverflow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.akj.nulloverflow.databinding.ActivityMainBinding
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
@@ -29,7 +27,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var info: MutableList<Info>
     lateinit var userAttr: MutableMap<String, String>
     private var timeRenew = mutableMapOf<String, Long>()
-    lateinit var recyclerViewState: Parcelable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -257,7 +254,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         info = loadData()
         re_adapter = CustomAdapter()
-        re_adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT
         re_adapter.listData = info
         binding.seatRecycler.adapter = re_adapter
         binding.seatRecycler.layoutManager = LinearLayoutManager(this)
